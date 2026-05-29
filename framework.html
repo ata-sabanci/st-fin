@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Framework — ST-Fin Geometric Strategy</title>
+  <meta name="description" content="Learn how the ICS coordinate system, frozen anchors, and five triangle types work together to measure price geometrically.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><img src="logo.webp" alt="Smart Trader AI"></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="framework.html">Framework</a>
+      <a href="lenses.html">20 Lenses</a>
+      <a href="strategy.html">Strategy</a>
+      <a href="ai.html">AI Integration</a>
+      <a href="pricing.html" class="nav-cta">Get Access</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+  </div>
+</nav>
+<div class="nav-mobile">
+  <a href="index.html">Home</a>
+  <a href="framework.html">Framework</a>
+  <a href="lenses.html">20 Lenses</a>
+  <a href="strategy.html">Strategy</a>
+  <a href="ai.html">AI Integration</a>
+  <a href="pricing.html">Get Access</a>
+</div>
+
+<!-- ── Page Header ── -->
+<header class="page-header">
+  <div class="page-header-inner">
+    <div class="section-label fade-up">How It Works</div>
+    <h1 class="section-title fade-up d1" style="font-size:clamp(32px,5vw,52px);">The Geometric Framework</h1>
+    <p class="section-desc fade-up d2">
+      From raw price data to dimensionless geometric measurements.
+      Three building blocks that make angles and areas comparable
+      across any symbol, timeframe, or volatility regime.
+    </p>
+  </div>
+</header>
+
+<div class="divider"></div>
+
+<!-- ── ICS ── -->
+<section class="section">
+  <div class="section-inner">
+    <div class="content-block observe">
+      <h2>📐 ICS — Isotropic Coordinate System</h2>
+      <p>
+        On a trading chart, time moves horizontally and price moves vertically — but they don't share
+        the same unit. The same price movement can appear steeper or flatter depending on zoom, scaling,
+        or timeframe. This makes raw visual angles inconsistent.
+      </p>
+      <p>
+        The ICS framework solves this by making both axes dimensionless:
+      </p>
+
+      <div class="callout">
+        <p>
+          <strong>Vertical axis:</strong> y = log(price) / σ — where σ is the Yang-Zhang volatility estimate<br>
+          <strong>Horizontal axis:</strong> x = bars / lookback — normalized time displacement
+        </p>
+      </div>
+
+      <p>
+        Inside this normalized space, triangle measurements are calculated <em>mathematically</em>,
+        not visually. Price displacement becomes <code>dy</code>, time displacement becomes <code>dx</code>,
+        the angle comes from <code>atan(dy/dx)</code>, and area from <code>0.5 × |dy| × |dx|</code>.
+      </p>
+      <p>
+        This is what makes ICS triangles different from ordinary chart drawings:
+        they are calculated structures, not visual impressions.
+      </p>
+    </div>
+
+    <!-- ── Interactive Calculator ── -->
+    <div class="demo-box observe" id="triangle-calc">
+      <h4>⚡ Live ICS Triangle Calculator</h4>
+      <p style="color:var(--text-3); font-size:14px; margin-bottom:20px;">
+        Adjust the values below to see how angle, distance, area, and centroid change in real time.
+      </p>
+
+      <div class="demo-controls">
+        <div class="demo-control">
+          <label>Target Price <span class="val" id="val-price">105</span></label>
+          <input type="range" id="calc-price" min="50" max="200" value="105" step="1">
+        </div>
+        <div class="demo-control">
+          <label>Anchor Price <span class="val" id="val-anchor">100</span></label>
+          <input type="range" id="calc-anchor" min="50" max="200" value="100" step="1">
+        </div>
+        <div class="demo-control">
+          <label>Bars Since Anchor <span class="val" id="val-bars">10</span></label>
+          <input type="range" id="calc-bars" min="1" max="100" value="10" step="1">
+        </div>
+        <div class="demo-control">
+          <label>Lookback <span class="val" id="val-lookback">23</span></label>
+          <input type="range" id="calc-lookback" min="5" max="100" value="23" step="1">
+        </div>
+        <div class="demo-control">
+          <label>Sigma (σ) <span class="val" id="val-sigma">0.02</span></label>
+          <input type="range" id="calc-sigma" min="0.005" max="0.1" value="0.02" step="0.001">
+        </div>
+      </div>
+
+      <div class="demo-output">
+        <div class="demo-metric">
+          <div class="label">θ Angle</div>
+          <div class="value" id="out-angle" style="color:var(--floor);">0°</div>
+        </div>
+        <div class="demo-metric">
+          <div class="label">dy Distance</div>
+          <div class="value" id="out-distance" style="color:var(--center);">0</div>
+        </div>
+        <div class="demo-metric">
+          <div class="label">A Area</div>
+          <div class="value" id="out-area" style="color:var(--pin-up);">0</div>
+        </div>
+        <div class="demo-metric">
+          <div class="label">C̄ Centroid</div>
+          <div class="value" id="out-centroid" style="color:var(--pin-dn);">0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── Frozen Anchors ── -->
+<section class="section" style="background:var(--bg-1);">
+  <div class="section-inner">
+    <div class="content-block observe">
+      <h2>🧊 Frozen Anchors — The Fixed Reference</h2>
+      <p>
+        Before any triangle can be measured, the model needs a fixed origin — a point that
+        does not move while the market continues around it. Without a stable reference,
+        geometric measurements would shift every bar.
+      </p>
+      <p>
+        The strategy scans a lookback window (default: 23 bars) and identifies three structural levels:
+      </p>
+
+      <div class="card-grid" style="grid-template-columns:repeat(3, 1fr); margin:32px 0;">
+        <div class="card" style="text-align:center;">
+          <div style="color:var(--ceil); font-family:var(--font-display); font-size:28px; font-weight:700;">Ceiling</div>
+          <p style="margin-top:8px;">Highest High in the lookback window</p>
+        </div>
+        <div class="card" style="text-align:center;">
+          <div style="color:var(--center); font-family:var(--font-display); font-size:28px; font-weight:700;">Center</div>
+          <p style="margin-top:8px;">Geometric mean √(HH × LL)</p>
+        </div>
+        <div class="card" style="text-align:center;">
+          <div style="color:var(--floor); font-family:var(--font-display); font-size:28px; font-weight:700;">Floor</div>
+          <p style="margin-top:8px;">Lowest Low in the lookback window</p>
+        </div>
+      </div>
+
+      <p>
+        These levels are <strong>frozen</strong> at the bar where the scan completes.
+        From that moment, the anchor holds still. When the close breaks above the ceiling
+        or below the floor, the anchor resets and a new cycle begins.
+      </p>
+    </div>
+
+    <div class="snapshot observe">
+      <a href="https://www.tradingview.com/x/xGhtUsvi/" target="_blank">
+        <img src="https://s3.tradingview.com/snapshots/x/xGhtUsvi.png" alt="Frozen anchor levels" loading="lazy">
+      </a>
+      <div class="snapshot-caption">
+        Frozen anchor levels on a daily chart. Ceiling, Floor, and Center are locked at the freeze bar
+        and held fixed. When the close breaks the ceiling or floor, the anchor resets.
+      </div>
+    </div>
+
+    <div class="callout observe">
+      <p>
+        <strong>Why 23?</strong> The default lookback of 23 is a prime number near a typical
+        trading month length, but not directly aligned with common cycle lengths (5, 10, 14, 20, 21).
+        This reduces harmonic overlap. The period is fully adjustable.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── Five Triangle Types ── -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label observe">Five Triangle Types</div>
+    <h2 class="section-title observe">Each Shape Measures Something Different</h2>
+    <p class="section-desc observe">
+      Three main right triangles track price relative to the upper, middle, and lower reference.
+      Two pin triangles isolate the candle's shadow behavior — upper and lower wick rejection.
+    </p>
+
+    <!-- Ceiling -->
+    <div class="content-block observe" style="margin-top:48px;">
+      <h3 style="color:var(--ceil);">▲ Ceiling — HH → High</h3>
+      <p>
+        Connects the frozen highest high to the current bar's high.
+        Tracks how the market's upper boundary behaves relative to the structural ceiling.
+        When the high sits below the frozen ceiling, the angle is negative — price is compressing beneath the reference.
+      </p>
+      <div class="snapshot">
+        <a href="https://www.tradingview.com/x/Pf4Htf5J/" target="_blank">
+          <img src="https://s3.tradingview.com/snapshots/p/Pf4Htf5J.png" alt="Ceiling triangle" loading="lazy">
+        </a>
+      </div>
+    </div>
+
+    <!-- Center -->
+    <div class="content-block observe">
+      <h3 style="color:var(--center);">◆ Center — Mid → Mid</h3>
+      <p>
+        Connects the frozen geometric mean to the current bar's geometric mean (√(High × Low)).
+        Captures the general directional lean — whether price favors the upper or lower half of the frozen range.
+        Both endpoints use geometric mean for proportional weighting.
+      </p>
+      <div class="snapshot">
+        <a href="https://www.tradingview.com/x/NHaY5uip/" target="_blank">
+          <img src="https://s3.tradingview.com/snapshots/n/NHaY5uip.png" alt="Center triangle" loading="lazy">
+        </a>
+      </div>
+    </div>
+
+    <!-- Floor -->
+    <div class="content-block observe">
+      <h3 style="color:var(--floor);">▼ Floor — LL → Low</h3>
+      <p>
+        Connects the frozen lowest low to the current bar's low.
+        Tracks support behavior, compression near the lower boundary, or gradual lift away
+        from the structural low. Mirrors the Ceiling triangle from the opposite direction.
+      </p>
+      <div class="snapshot">
+        <a href="https://www.tradingview.com/x/LnN26cBx/" target="_blank">
+          <img src="https://s3.tradingview.com/snapshots/l/LnN26cBx.png" alt="Floor triangle" loading="lazy">
+        </a>
+      </div>
+    </div>
+
+    <!-- Pin Up -->
+    <div class="content-block observe">
+      <h3 style="color:var(--pin-up);">△ Pin Up — HH → Upper Wick</h3>
+      <p>
+        Isolates the upper wick relative to the frozen ceiling.
+        Three vertices form a non-right triangle: frozen HH (A), current bar's high (B),
+        and body top (C). The angle at A captures how much the wick fans out as seen from
+        the ceiling — quantified rejection behavior.
+      </p>
+      <div class="snapshot">
+        <a href="https://www.tradingview.com/x/zf6C3E7w/" target="_blank">
+          <img src="https://s3.tradingview.com/snapshots/z/zf6C3E7w.png" alt="Pin Up triangle" loading="lazy">
+        </a>
+      </div>
+    </div>
+
+    <!-- Pin Down -->
+    <div class="content-block observe">
+      <h3 style="color:var(--pin-dn);">▽ Pin Down — LL → Lower Wick</h3>
+      <p>
+        Mirrors Pin Up from the floor. Captures lower wick rejection and buying absorption.
+        When the lower wick is long near the floor, the geometry shows a measurable rejection
+        from the lower zone.
+      </p>
+      <div class="snapshot">
+        <a href="https://www.tradingview.com/x/Aw2CJI4q/" target="_blank">
+          <img src="https://s3.tradingview.com/snapshots/a/Aw2CJI4q.png" alt="Pin Down triangle" loading="lazy">
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Four Metrics ── -->
+<section class="section" style="background:var(--bg-1);">
+  <div class="section-inner">
+    <div class="section-label observe">Four Metrics</div>
+    <h2 class="section-title observe">What Each Triangle Produces</h2>
+
+    <div class="card-grid" style="grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));">
+      <div class="card observe">
+        <h3 style="color:#e8e8f0;">θ Angle</h3>
+        <p><strong>Steepness of movement.</strong> How steeply price has moved relative to the reference, in degrees. Positive = above anchor, negative = below. Compresses naturally as time passes.</p>
+      </div>
+      <div class="card observe">
+        <h3 style="color:#e8e8f0;">dy Distance</h3>
+        <p><strong>Signed displacement.</strong> How far the target has moved from the anchor in ICS space. Divided by sigma, so the same value represents the same relative stretch regardless of symbol.</p>
+      </div>
+      <div class="card observe">
+        <h3 style="color:#e8e8f0;">A Area</h3>
+        <p><strong>Combined displacement.</strong> Product of time and price dimensions. Grows when either grows. Useful for assessing overall weight — a large area means the triangle occupies significant geometric space.</p>
+      </div>
+      <div class="card observe">
+        <h3 style="color:#e8e8f0;">C̄ Centroid</h3>
+        <p><strong>Geometric balance point.</strong> Where the triangle's internal weight is concentrated. Shifts in centroid can highlight changes in structural balance before they become visible in angle or distance.</p>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:48px;" class="observe">
+      <a href="lenses.html" class="btn btn-primary">Explore All 20 Lenses →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="framework.html">Framework</a>
+      <a href="lenses.html">20 Lenses</a>
+      <a href="strategy.html">Strategy</a>
+      <a href="ai.html">AI Integration</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="https://www.tradingview.com/u/ata_sabanci/" target="_blank">TradingView</a>
+      <a href="https://x.com/sabanci_ata" target="_blank">X (Twitter)</a>
+    </div>
+    <p class="footer-copy">
+      © 2026 ST-Fin by ata_sabanci. Not financial advice. You observe. You decide. You own the result.
+    </p>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

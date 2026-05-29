@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Integration — ST-Fin Geometric Strategy</title>
+  <meta name="description" content="Use TradingView AI Chart Copilot and CSV export to navigate the combinatorial space of 20 geometric lenses.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><img src="logo.webp" alt="Smart Trader AI"></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="framework.html">Framework</a>
+      <a href="lenses.html">20 Lenses</a>
+      <a href="strategy.html">Strategy</a>
+      <a href="ai.html">AI Integration</a>
+      <a href="pricing.html" class="nav-cta">Get Access</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+  </div>
+</nav>
+<div class="nav-mobile">
+  <a href="index.html">Home</a>
+  <a href="framework.html">Framework</a>
+  <a href="lenses.html">20 Lenses</a>
+  <a href="strategy.html">Strategy</a>
+  <a href="ai.html">AI Integration</a>
+  <a href="pricing.html">Get Access</a>
+</div>
+
+<!-- ── Header ── -->
+<header class="page-header">
+  <div class="page-header-inner">
+    <div class="section-label fade-up">AI as the Bridge</div>
+    <h1 class="section-title fade-up d1" style="font-size:clamp(32px,5vw,52px);">Navigate the Space<br>No Human Can Explore Alone</h1>
+    <p class="section-desc fade-up d2">
+      With 10<sup>39</sup> structural combinations, manual exploration hits a wall.
+      AI turns a combinatorial search into a guided conversation.
+    </p>
+  </div>
+</header>
+
+<div class="divider"></div>
+
+<!-- ── The Problem ── -->
+<section class="section">
+  <div class="section-inner">
+    <div class="content-block observe">
+      <h2>The Combinatorial Challenge</h2>
+      <p>
+        Every time a strategy is configured by hand, the trader selects one point in a vast space
+        and hopes it's a good one — without visibility into what the rest of the space looks like.
+        The individual tools are simple. The complexity lives in combinations.
+      </p>
+      <p>
+        The human mind excels at pattern recognition, but it is not built to systematically explore
+        a space measured in tens of trillions of possibilities. This is where artificial intelligence
+        changes the equation — not by replacing judgment, but by navigating the space that no human
+        can explore manually.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── Copilot ── -->
+<section class="section" style="background:var(--bg-1);">
+  <div class="section-inner">
+    <div class="content-block observe">
+      <h2>🤖 TradingView AI Chart Copilot</h2>
+      <p>
+        An AI-powered assistant that lives in your browser's side panel and works alongside
+        your TradingView charts. It reads your current chart state, understands the indicators
+        applied to it, and responds to natural-language questions about what it sees.
+      </p>
+    </div>
+
+    <div class="card-grid observe" style="grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:rgba(0,229,255,0.12);">📊</div>
+        <h3>Reads Your Chart</h3>
+        <p>Sees the live visual output of ST-Fin — active lenses, oscillator readings, and chart overlay — directly inside the browser.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(255,152,0,0.12);">💬</div>
+        <h3>Natural Language</h3>
+        <p>Ask questions like "Which lenses are showing extremes right now?" or "What pattern does Pin Up Angle show near the ceiling?"</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(38,166,154,0.12);">⚡</div>
+        <h3>Instant Analysis</h3>
+        <p>What would take hours of manual configuration becomes a single prompt. Activate variables, ask the Copilot to analyze the result.</p>
+      </div>
+    </div>
+
+    <!-- ── Setup Steps ── -->
+    <div style="margin-top:48px;" class="observe">
+      <h3 style="color:var(--text-1); margin-bottom:24px;">Getting Started — 30 Seconds</h3>
+
+      <div class="workflow-step">
+        <div class="workflow-num">1</div>
+        <div class="workflow-text">
+          <h4>Install the Extension</h4>
+          <p>Available for Chrome and all Chromium-based browsers (Edge, Brave, Opera, Vivaldi).</p>
+          <div style="margin-top:12px;">
+            <a href="https://chromewebstore.google.com/detail/tradingview-remix-ai-char/fchmejnoncmdhlebgdgifdnehoibalnd" target="_blank" class="btn btn-outline" style="font-size:13px; padding:8px 16px;">Install from Chrome Web Store →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="workflow-step">
+        <div class="workflow-num">2</div>
+        <div class="workflow-text">
+          <h4>Open Any TradingView Chart</h4>
+          <p>Apply the ST-Fin strategy and activate the lenses you want to explore.</p>
+        </div>
+      </div>
+
+      <div class="workflow-step">
+        <div class="workflow-num">3</div>
+        <div class="workflow-text">
+          <h4>Click the Extension Icon</h4>
+          <p>Sign in and start asking questions about what the geometry is showing.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout observe">
+      <p>
+        <strong>Learn more:</strong> Read TradingView's official announcement about the AI Chart Copilot beta,
+        including top use cases and capabilities.<br>
+        <a href="https://www.tradingview.com/blog/en/tradingview-ai-chart-copilot-beta-57730/" target="_blank" style="margin-top:8px; display:inline-block;">Read the Blog Post →</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── CSV Export ── -->
+<section class="section">
+  <div class="section-inner">
+    <div class="content-block observe">
+      <h2>📊 CSV Export — Portable Numerical Data</h2>
+      <p>
+        For deeper, more structured review, the same lens data can be exported from TradingView
+        as a CSV file. When ST-Fin is applied to a chart, each enabled lens appears as a named
+        data column in the exported file alongside timestamp and price data.
+      </p>
+    </div>
+
+    <div class="callout observe">
+      <p>
+        <strong>Important:</strong> Only active lenses are exported. If a lens is turned off in settings,
+        it won't appear in the CSV. Before exporting, activate the specific lenses you want to review.
+      </p>
+    </div>
+
+    <div class="content-block observe">
+      <h3 style="color:var(--text-1);">Recommended Workflow</h3>
+
+      <div class="workflow-step">
+        <div class="workflow-num">1</div>
+        <div class="workflow-text">
+          <h4>Activate One Lens</h4>
+          <p>Start with a single lens per review pass for cleaner pattern extraction. Activating all 20 at once creates a dense dataset.</p>
+        </div>
+      </div>
+
+      <div class="workflow-step">
+        <div class="workflow-num">2</div>
+        <div class="workflow-text">
+          <h4>Export Chart Data</h4>
+          <p>Use TradingView's data export feature to save the chart data as CSV.</p>
+        </div>
+      </div>
+
+      <div class="workflow-step">
+        <div class="workflow-num">3</div>
+        <div class="workflow-text">
+          <h4>Review as Numeric Series</h4>
+          <p>Study how the lens behaves near local highs, rejection zones, or failed breakouts.</p>
+        </div>
+      </div>
+
+      <div class="workflow-step">
+        <div class="workflow-num">4</div>
+        <div class="workflow-text">
+          <h4>Compare Against Chart</h4>
+          <p>Map the findings back to the price chart, then repeat with another lens.</p>
+        </div>
+      </div>
+
+      <div class="workflow-step">
+        <div class="workflow-num">5</div>
+        <div class="workflow-text">
+          <h4>Combine Selected Lenses</h4>
+          <p>Once individual behaviors show meaningful structure, combine them for multi-lens analysis.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block observe">
+      <h3 style="color:var(--text-1);">Questions to Ask Each Lens</h3>
+      <div class="card-grid" style="grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));">
+        <div class="card">
+          <p style="font-size:14px;">Where does this lens spend most of its time?</p>
+        </div>
+        <div class="card">
+          <p style="font-size:14px;">Which numeric zones are rare?</p>
+        </div>
+        <div class="card">
+          <p style="font-size:14px;">What tends to happen after the lens reaches an extreme zone?</p>
+        </div>
+        <div class="card">
+          <p style="font-size:14px;">Does the behavior change across different anchor cycles?</p>
+        </div>
+        <div class="card">
+          <p style="font-size:14px;">Does it behave differently near the ceiling, center, or floor?</p>
+        </div>
+        <div class="card">
+          <p style="font-size:14px;">Which symbols or timeframes respond best to this lens?</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── Both Paths ── -->
+<section class="section" style="background:var(--bg-1);">
+  <div class="section-inner">
+    <div class="content-block observe">
+      <h2>Two Paths, Same Framework</h2>
+      <p>Both approaches use the same geometric output. Choose based on your workflow:</p>
+    </div>
+
+    <div class="card-grid observe" style="grid-template-columns:repeat(auto-fit, minmax(340px, 1fr));">
+      <div class="card" style="border-color:rgba(0,229,255,0.2);">
+        <h3 style="color:var(--center);">🤖 AI Copilot</h3>
+        <p>Faster, chart-based exploration inside the browser. Interactive, conversational. Best for real-time analysis and quick hypothesis testing.</p>
+        <div style="margin-top:16px;">
+          <a href="https://chromewebstore.google.com/detail/tradingview-remix-ai-char/fchmejnoncmdhlebgdgifdnehoibalnd" target="_blank" class="btn btn-outline" style="font-size:13px; padding:8px 14px;">Install Copilot →</a>
+        </div>
+      </div>
+      <div class="card" style="border-color:rgba(255,152,0,0.2);">
+        <h3 style="color:var(--pin-up);">📊 CSV Export</h3>
+        <p>Portable numerical data for deeper review. Statistical analysis, pattern mining, external tools. Best for systematic, offline study.</p>
+        <div style="margin-top:16px;">
+          <a href="https://www.tradingview.com/blog/en/tradingview-ai-chart-copilot-beta-57730/" target="_blank" class="btn btn-outline" style="font-size:13px; padding:8px 14px;">Learn More →</a>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:48px;" class="observe">
+      <a href="pricing.html" class="btn btn-primary">Get Access to ST-Fin →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="framework.html">Framework</a>
+      <a href="lenses.html">20 Lenses</a>
+      <a href="strategy.html">Strategy</a>
+      <a href="ai.html">AI Integration</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="https://www.tradingview.com/u/ata_sabanci/" target="_blank">TradingView</a>
+      <a href="https://x.com/sabanci_ata" target="_blank">X (Twitter)</a>
+    </div>
+    <p class="footer-copy">© 2026 ST-Fin by ata_sabanci. Not financial advice. You observe. You decide. You own the result.</p>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

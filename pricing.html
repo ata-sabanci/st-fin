@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Get Access — ST-Fin Geometric Strategy</title>
+  <meta name="description" content="Start with a 72-hour free trial. Monthly and annual plans available. Full access to all 20 geometric lenses and the strategy system.">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .region-tabs { display:flex; gap:0; margin-bottom:32px; justify-content:center; }
+    .region-tab {
+      font-family:var(--font-display); font-size:14px; font-weight:600;
+      padding:12px 28px; border:1px solid var(--border); cursor:pointer;
+      background:transparent; color:var(--text-3); transition:all .2s;
+    }
+    .region-tab:first-child { border-radius:10px 0 0 10px; }
+    .region-tab:last-child { border-radius:0 10px 10px 0; }
+    .region-tab.active {
+      background:rgba(0,229,255,0.1); color:var(--center); border-color:var(--center);
+    }
+    .region-content { display:none; }
+    .region-content.active { display:block; }
+    .paypal-box {
+      background:var(--bg-card); border:1px solid var(--border); border-radius:20px;
+      padding:48px 40px; text-align:center; max-width:500px; margin:0 auto;
+    }
+    .trial-banner {
+      background:linear-gradient(135deg, rgba(0,229,255,0.08), rgba(38,166,154,0.08));
+      border:1px solid rgba(0,229,255,0.15); border-radius:16px;
+      padding:32px; text-align:center; margin-bottom:48px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><img src="logo.webp" alt="Smart Trader AI"></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="framework.html">Framework</a>
+      <a href="lenses.html">20 Lenses</a>
+      <a href="strategy.html">Strategy</a>
+      <a href="ai.html">AI Integration</a>
+      <a href="pricing.html" class="nav-cta">Get Access</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+  </div>
+</nav>
+<div class="nav-mobile">
+  <a href="index.html">Home</a>
+  <a href="framework.html">Framework</a>
+  <a href="lenses.html">20 Lenses</a>
+  <a href="strategy.html">Strategy</a>
+  <a href="ai.html">AI Integration</a>
+  <a href="pricing.html">Get Access</a>
+</div>
+
+<!-- ── Header ── -->
+<header class="page-header" style="text-align:center;">
+  <div class="page-header-inner">
+    <div class="section-label fade-up" style="text-align:center;">Access</div>
+    <h1 class="section-title fade-up d1" style="font-size:clamp(32px,5vw,52px); text-align:center;">Get Access to ST-Fin</h1>
+    <p class="section-desc fade-up d2" style="text-align:center; margin:0 auto 20px;">
+      Full access to all features. All 20 geometric lenses. No code editing required.
+    </p>
+  </div>
+</header>
+
+<div class="divider"></div>
+
+<!-- ── Trial Banner ── -->
+<section class="section" style="padding-top:48px; padding-bottom:0;">
+  <div class="section-inner">
+    <div class="trial-banner fade-up">
+      <div style="font-family:var(--font-display); font-size:14px; color:var(--center); margin-bottom:8px;">FREE TRIAL</div>
+      <h2 style="font-family:var(--font-display); font-size:28px; font-weight:700; margin-bottom:12px;">72 Hours. Full Access. No Commitment.</h2>
+      <p style="color:var(--text-2); max-width:500px; margin:0 auto 20px;">
+        Send a direct message on TradingView to activate your trial.
+        Access is enabled manually within a few hours of your request.
+      </p>
+      <a href="https://www.tradingview.com/u/ata_sabanci/" target="_blank" class="btn btn-primary">Message on TradingView →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Pricing ── -->
+<section class="section">
+  <div class="section-inner">
+
+    <!-- Region Selector -->
+    <div class="region-tabs observe" id="region-selector">
+      <button class="region-tab active" data-region="turkey" onclick="switchRegion('turkey')">🇹🇷 Turkey (Shopier)</button>
+      <button class="region-tab" data-region="global" onclick="switchRegion('global')">🌍 Global (PayPal)</button>
+    </div>
+
+    <!-- Turkey — Shopier -->
+    <div class="region-content active" id="region-turkey">
+      <div class="pricing-grid">
+        <div class="price-card observe">
+          <div class="price-name">Monthly</div>
+          <div class="price-amount" style="font-size:36px;">Monthly Plan</div>
+          <div class="price-period">Billed monthly via Shopier</div>
+          <ul class="price-features">
+            <li>All 20 geometric lenses</li>
+            <li>20 configurable condition slots</li>
+            <li>Quorum-based signal logic</li>
+            <li>SL / TP / Trailing stop</li>
+            <li>Alert system with full details</li>
+            <li>Chart overlay visualization</li>
+            <li>CSV export for all active lenses</li>
+          </ul>
+          <a href="https://www.shopier.com/ata_sabanci/47617968" target="_blank" class="btn btn-outline" style="width:100%; justify-content:center;">Subscribe Monthly →</a>
+        </div>
+
+        <div class="price-card featured observe">
+          <div class="price-name">Annual</div>
+          <div class="price-amount" style="font-size:36px;">Annual Plan</div>
+          <div class="price-period">Billed annually via Shopier — Save more</div>
+          <ul class="price-features">
+            <li>Everything in Monthly</li>
+            <li>Priority support</li>
+            <li>Early access to updates</li>
+            <li>Significant savings vs monthly</li>
+          </ul>
+          <a href="https://www.shopier.com/ata_sabanci/47618119" target="_blank" class="btn btn-primary" style="width:100%; justify-content:center;">Subscribe Annually →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Global — PayPal -->
+    <div class="region-content" id="region-global">
+      <div class="paypal-box observe">
+        <div style="font-size:48px; margin-bottom:16px;">🌍</div>
+        <h3 style="font-family:var(--font-display); font-size:22px; margin-bottom:12px;">International Payments via PayPal</h3>
+        <p style="color:var(--text-2); margin-bottom:24px;">
+          For users outside Turkey, payments are accepted through PayPal.
+          Send your payment and TradingView username to:
+        </p>
+        <div style="background:var(--bg-3); border-radius:10px; padding:16px 24px; margin-bottom:24px;">
+          <span style="font-family:var(--font-display); font-size:16px; color:var(--center);">ata.sabanci@outlook.com</span>
+        </div>
+        <p style="color:var(--text-3); font-size:14px; margin-bottom:24px;">
+          Include your TradingView username in the PayPal note so access can be activated for your account.
+        </p>
+        <a href="https://www.tradingview.com/u/ata_sabanci/" target="_blank" class="btn btn-outline" style="margin-top:8px;">Or Message on TradingView</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── What You Get ── -->
+<section class="section" style="background:var(--bg-1);">
+  <div class="section-inner">
+    <div class="section-label observe" style="text-align:center;">Included</div>
+    <h2 class="section-title observe" style="text-align:center;">Everything in Your Subscription</h2>
+
+    <div class="card-grid observe" style="margin-top:40px;">
+      <div class="card card-ceil">
+        <div class="card-icon">📐</div>
+        <h3>ICS Framework</h3>
+        <p>Full five-triangle ICS engine with Yang-Zhang volatility normalization. Angles, distances, areas, and centroids — all 20 lenses.</p>
+      </div>
+      <div class="card card-center">
+        <div class="card-icon">⚡</div>
+        <h3>20 Condition Slots</h3>
+        <p>Each slot monitors any lens with 5 condition types and 7 side options. Quorum-based signal logic with full flexibility.</p>
+      </div>
+      <div class="card card-floor">
+        <div class="card-icon">🛡️</div>
+        <h3>Position Management</h3>
+        <p>Fixed SL, fixed TP, and trailing stop — all independent, all combinable. Unified exit logic with automatic protective selection.</p>
+      </div>
+      <div class="card card-pnu">
+        <div class="card-icon">🔔</div>
+        <h3>Alert System</h3>
+        <p>Separate alerts for Long/Short entry and exit. Each message includes quorum result, slot values, and SL/TP levels.</p>
+      </div>
+      <div class="card card-pnd">
+        <div class="card-icon">🎨</div>
+        <h3>Chart Overlay</h3>
+        <p>Visual triangle overlays with linefill, anchor level lines, and price labels. Purely visual — never affects calculations.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(255,255,255,0.06);">📊</div>
+        <h3>CSV Export</h3>
+        <p>All active lens readings exportable as named columns for external analysis. Enable only the lenses you need.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── FAQ ── -->
+<section class="section">
+  <div class="section-inner">
+    <h2 class="section-title observe" style="text-align:center;">Frequently Asked Questions</h2>
+
+    <div class="accordion observe" style="max-width:700px; margin:40px auto 0;">
+      <div class="accordion-item">
+        <button class="accordion-header">
+          How do I activate my access?
+          <span class="arrow">▾</span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            After payment, send your TradingView username via DM on TradingView or include it in your PayPal note. Access is activated manually within a few hours.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header">
+          Do I need to edit any code?
+          <span class="arrow">▾</span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            No. Every parameter — all 20 slots, conditions, thresholds, sides, position management, and alerts — is accessible through the strategy's settings panel in TradingView. Zero code editing required.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header">
+          Which symbols and timeframes does it work on?
+          <span class="arrow">▾</span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            ST-Fin works on any symbol and any timeframe available in TradingView. The ICS normalization makes geometric readings more comparable across different markets and timeframes.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header">
+          Is this financial advice?
+          <span class="arrow">▾</span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            No. ST-Fin is a measurement tool, not a prediction engine. It does not tell you what to do. It measures — then steps aside. The observations you make, the configurations you build, and the trading decisions you take are entirely your own.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header">
+          Can I use the AI Chart Copilot with ST-Fin?
+          <span class="arrow">▾</span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            Yes. TradingView's AI Chart Copilot (free public beta) reads your chart including ST-Fin's output. Install the Chrome extension, apply ST-Fin to your chart, and ask the Copilot to analyze the active lenses.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header">
+          What is the free trial?
+          <span class="arrow">▾</span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            A 72-hour trial with full access to all features. No payment required upfront. Send a DM on TradingView to activate it.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Final CTA ── -->
+<section class="section" style="text-align:center; background:var(--bg-1);">
+  <div class="section-inner">
+    <h2 class="section-title observe">Start Measuring Markets Through Geometry</h2>
+    <p class="section-desc observe" style="text-align:center; margin:0 auto 32px;">
+      72-hour free trial. Full access. No code editing required.
+    </p>
+    <div class="observe" style="display:flex; justify-content:center; gap:14px; flex-wrap:wrap;">
+      <a href="https://www.tradingview.com/u/ata_sabanci/" target="_blank" class="btn btn-primary">Start Free Trial →</a>
+      <a href="https://www.tradingview.com/script/7VaVDKeE-Smart-Trader-Final-Episode-AI-Assisting-Geometric-Strategy/" target="_blank" class="btn btn-outline">View on TradingView</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="framework.html">Framework</a>
+      <a href="lenses.html">20 Lenses</a>
+      <a href="strategy.html">Strategy</a>
+      <a href="ai.html">AI Integration</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="https://www.tradingview.com/u/ata_sabanci/" target="_blank">TradingView</a>
+      <a href="https://x.com/sabanci_ata" target="_blank">X (Twitter)</a>
+    </div>
+    <p class="footer-copy">© 2026 ST-Fin by ata_sabanci. Not financial advice. You observe. You decide. You own the result.</p>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script>
+function switchRegion(region) {
+  document.querySelectorAll('.region-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.region-content').forEach(c => c.classList.remove('active'));
+  document.querySelector('[data-region="' + region + '"]').classList.add('active');
+  document.getElementById('region-' + region).classList.add('active');
+}
+</script>
+</body>
+</html>

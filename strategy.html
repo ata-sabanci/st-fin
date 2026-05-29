@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strategy System — ST-Fin Geometric Strategy</title>
+  <meta name="description" content="20 condition slots, quorum-based signal logic, and unified position management. Learn how to turn geometric lenses into trading rules.">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .slot-grid {
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(54px, 1fr));
+      gap:6px; margin:16px 0 24px;
+    }
+    .slot-toggle {
+      width:100%; aspect-ratio:1; border-radius:8px; border:1px solid var(--border);
+      background:var(--bg-3); font-family:var(--font-display); font-size:12px;
+      color:var(--text-3); cursor:pointer; transition:all .2s;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .slot-toggle:hover { border-color:rgba(255,255,255,0.25); }
+    .slot-toggle.on {
+      background:rgba(0,229,255,0.15); border-color:var(--center); color:var(--center);
+    }
+    .workflow-step {
+      display:flex; gap:20px; margin-bottom:32px; align-items:start;
+    }
+    .workflow-num {
+      flex-shrink:0; width:40px; height:40px; border-radius:10px;
+      background:rgba(0,229,255,0.1); border:1px solid rgba(0,229,255,0.2);
+      display:flex; align-items:center; justify-content:center;
+      font-family:var(--font-display); font-size:16px; font-weight:700; color:var(--center);
+    }
+    .workflow-text h4 {
+      font-family:var(--font-display); font-size:16px; font-weight:700; margin-bottom:6px;
+    }
+    .workflow-text p { color:var(--text-2); font-size:15px; }
+  </style>
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><img src="logo.webp" alt="Smart Trader AI"></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="framework.html">Framework</a>
+      <a href="lenses.html">20 Lenses</a>
+      <a href="strategy.html">Strategy</a>
+      <a href="ai.html">AI Integration</a>
+      <a href="pricing.html" class="nav-cta">Get Access</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+  </div>
+</nav>
+<div class="nav-mobile">
+  <a href="index.html">Home</a>
+  <a href="framework.html">Framework</a>
+  <a href="lenses.html">20 Lenses</a>
+  <a href="strategy.html">Strategy</a>
+  <a href="ai.html">AI Integration</a>
+  <a href="pricing.html">Get Access</a>
+</div>
+
+<!-- ── Header ── -->
+<header class="page-header">
+  <div class="page-header-inner">
+    <div class="section-label fade-up">From Observation to Action</div>
+    <h1 class="section-title fade-up d1" style="font-size:clamp(32px,5vw,52px);">The Strategy System</h1>
+    <p class="section-desc fade-up d2">
+      Twenty condition slots, a quorum-based signal engine, and unified position management.
+      Every parameter accessible through the settings panel — no code editing required.
+    </p>
+  </div>
+</header>
+
+<div class="divider"></div>
+
+<!-- ── Condition Slots ── -->
+<section class="section">
+  <div class="section-inner">
+    <div class="content-block observe">
+      <h2>⚡ Condition Slots</h2>
+      <p>
+        The strategy provides 20 independent condition slots. Each slot monitors any one of the
+        20 geometric lenses and tests whether its current value meets a specified condition.
+        Each slot has five configurable settings:
+      </p>
+    </div>
+
+    <div class="card-grid observe" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); margin-bottom:40px;">
+      <div class="card">
+        <h3 style="color:var(--center); font-size:15px;">Variable</h3>
+        <p style="font-size:14px;">Which of the 20 lenses this slot watches. OFF = slot excluded.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--pin-up); font-size:15px;">Condition</h3>
+        <p style="font-size:14px;">How the value is evaluated: &gt;, &lt;, between, cross&nbsp;&gt;, cross&nbsp;&lt;</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--floor); font-size:15px;">Threshold</h3>
+        <p style="font-size:14px;">Numeric level for the test. Continuous — any value, not a preset list.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--pin-dn); font-size:15px;">Apply to</h3>
+        <p style="font-size:14px;">Long entry, Short entry, Both entry, Long exit, Short exit, Both exit, or All.</p>
+      </div>
+    </div>
+
+    <div class="callout observe">
+      <p>
+        <strong>700 configurations per slot.</strong> 20 variables × 5 conditions × 7 sides = 700
+        structural configurations from a single active slot. This number is specific to this framework —
+        it comes from geometry, not a textbook formula.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── Combinatorial Counter ── -->
+<section class="section" style="background:var(--bg-1);">
+  <div class="section-inner">
+    <div class="content-block observe">
+      <h2>📈 The Combinatorial Reality</h2>
+      <p>
+        The configuration space grows fast. Each additional active slot multiplies the possibilities.
+        Try it yourself:
+      </p>
+    </div>
+
+    <div class="demo-box observe" id="combo-counter">
+      <h4>⚡ Combinatorial Counter</h4>
+
+      <div class="demo-controls">
+        <div class="demo-control">
+          <label>Active Slots <span class="val" id="val-combo-slots">2</span></label>
+          <input type="range" id="combo-slots" min="1" max="5" value="2" step="1">
+        </div>
+      </div>
+
+      <div class="demo-output" style="grid-template-columns:1fr;">
+        <div class="demo-metric">
+          <div class="label">Structural Combinations</div>
+          <div class="value" id="combo-result" style="color:var(--center); font-size:28px;">245,350</div>
+        </div>
+      </div>
+
+      <p style="color:var(--text-3); font-size:13px; margin-top:16px; text-align:center;">
+        Before threshold tuning — each configuration branches into a continuous range of values
+      </p>
+    </div>
+
+    <div class="card-grid observe" style="grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));">
+      <div class="card" style="text-align:center;">
+        <div style="font-family:var(--font-display); font-size:24px; font-weight:700; color:var(--center);">1 slot</div>
+        <p style="font-size:14px; margin-top:4px;">700</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-family:var(--font-display); font-size:24px; font-weight:700; color:var(--center);">2 slots</div>
+        <p style="font-size:14px; margin-top:4px;">245,350</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-family:var(--font-display); font-size:24px; font-weight:700; color:var(--center);">3 slots</div>
+        <p style="font-size:14px; margin-top:4px;">57,411,900</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-family:var(--font-display); font-size:24px; font-weight:700; color:var(--center);">5 slots</div>
+        <p style="font-size:14px; margin-top:4px;">1.4 trillion</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── Quorum Logic ── -->
+<section class="section">
+  <div class="section-inner">
+    <div class="content-block observe">
+      <h2>⚙️ Quorum Logic</h2>
+      <p>
+        A single setting — <strong>Minimum slots required</strong> — controls how many active slots
+        must pass their condition before a signal fires. This creates a flexible spectrum:
+      </p>
+    </div>
+
+    <div class="card-grid observe" style="grid-template-columns:repeat(3, 1fr); margin-bottom:40px;">
+      <div class="card" style="text-align:center;">
+        <h3 style="color:var(--floor);">Min = 1</h3>
+        <p style="font-size:14px;">OR logic — any single slot is enough. Most permissive, most signals.</p>
+      </div>
+      <div class="card" style="text-align:center; border-color:var(--center);">
+        <h3 style="color:var(--center);">Min = 3 of 5</h3>
+        <p style="font-size:14px;">Quorum — majority must agree. Balanced filtering.</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <h3 style="color:var(--ceil);">Min = All</h3>
+        <p style="font-size:14px;">AND logic — every slot must pass. Most restrictive, fewest signals.</p>
+      </div>
+    </div>
+
+    <div class="callout observe">
+      <p>
+        <strong>Conflict guard:</strong> If both Long and Short entry quorums are met on the same bar,
+        neither trade is executed. Market indecision, not a directional signal.
+      </p>
+    </div>
+
+    <div class="content-block observe" style="margin-top:40px;">
+      <h3 style="color:var(--text-1);">Signal Modes</h3>
+      <p>
+        <strong>Close mode:</strong> Calculations use the previous bar's confirmed data. Signals appear
+        only after a bar completes — what you see is final. Recommended for backtesting.
+      </p>
+      <p>
+        <strong>Live mode:</strong> Calculations update in real time as the current bar forms. Faster,
+        but signals may shift before the bar closes.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── Position Management ── -->
+<section class="section" style="background:var(--bg-1);">
+  <div class="section-inner">
+    <div class="content-block observe">
+      <h2>🛡️ Position Management</h2>
+      <p>Three independent tools for managing open positions. Each can be enabled separately, and all three can run simultaneously.</p>
+    </div>
+
+    <div class="card-grid observe">
+      <div class="card">
+        <h3 style="color:var(--ceil);">Fixed Stop-Loss</h3>
+        <p>Percentage below entry (long) or above entry (short). Calculated from the actual average entry price, not from the signal bar's close.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--floor);">Fixed Take-Profit</h3>
+        <p>Percentage above entry (long) or below entry (short). Same calculation from actual fill price. Whichever level is hit first closes the position.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--center);">Trailing Stop</h3>
+        <p>Tracks the best price since entry. Long: follows highest high, stops at trail% below peak. Short: follows lowest low, stops at trail% above trough. Only moves in your favor.</p>
+      </div>
+    </div>
+
+    <div class="callout observe" style="margin-top:32px;">
+      <p>
+        <strong>Unified exit:</strong> When both fixed SL and trailing stop are active, the strategy
+        automatically selects the most protective level. A single exit order is maintained at all times.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── Example Configuration ── -->
+<section class="section">
+  <div class="section-inner">
+    <div class="content-block observe">
+      <h2>📋 Example: Two-Slot Configuration</h2>
+      <p>A real configuration on BTCUSD 1h, built by visual observation only — no optimization applied.</p>
+    </div>
+
+    <div class="demo-box observe">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:24px;">
+        <div>
+          <h4 style="color:var(--pin-up); margin-bottom:12px;">Slot 1</h4>
+          <p style="font-size:14px; color:var(--text-2);">
+            Variable: PnU Angle<br>
+            Condition: cross &gt; 50<br>
+            Apply to: Short entry
+          </p>
+        </div>
+        <div>
+          <h4 style="color:var(--pin-dn); margin-bottom:12px;">Slot 2</h4>
+          <p style="font-size:14px; color:var(--text-2);">
+            Variable: PnD Angle<br>
+            Condition: cross &lt; -150<br>
+            Apply to: Short exit
+          </p>
+        </div>
+      </div>
+
+      <p style="font-size:14px; color:var(--text-3);">
+        Min slots: 1 · Take-profit: 4% · No stop-loss · Signal mode: Close · Lookback: 23
+      </p>
+    </div>
+
+    <div class="card-grid observe" style="grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));">
+      <div class="card" style="text-align:center;">
+        <div style="font-family:var(--font-display); font-size:28px; font-weight:700; color:var(--floor);">107</div>
+        <p style="font-size:13px;">Trades</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-family:var(--font-display); font-size:28px; font-weight:700; color:var(--floor);">70.09%</div>
+        <p style="font-size:13px;">Win Rate</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-family:var(--font-display); font-size:28px; font-weight:700; color:var(--ceil);">-23.85%</div>
+        <p style="font-size:13px;">Total PnL</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-family:var(--font-display); font-size:28px; font-weight:700; color:var(--pin-up);">0.658</div>
+        <p style="font-size:13px;">Profit Factor</p>
+      </div>
+    </div>
+
+    <div class="snapshot observe">
+      <a href="https://www.tradingview.com/x/JWUuYxeI/" target="_blank">
+        <img src="https://s3.tradingview.com/snapshots/j/JWUuYxeI.png" alt="Example configuration results" loading="lazy">
+      </a>
+      <div class="snapshot-caption">
+        The 70% win rate shows the geometric observation captured a recurring pattern.
+        The negative PnL shows that without a stop-loss, the losing trades overwhelmed the capped winners.
+        The signal found the pattern — position management needs iteration.
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:48px;" class="observe">
+      <a href="ai.html" class="btn btn-primary">Use AI to Explore Faster →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="framework.html">Framework</a>
+      <a href="lenses.html">20 Lenses</a>
+      <a href="strategy.html">Strategy</a>
+      <a href="ai.html">AI Integration</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="https://www.tradingview.com/u/ata_sabanci/" target="_blank">TradingView</a>
+      <a href="https://x.com/sabanci_ata" target="_blank">X (Twitter)</a>
+    </div>
+    <p class="footer-copy">© 2026 ST-Fin by ata_sabanci. Not financial advice. You observe. You decide. You own the result.</p>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

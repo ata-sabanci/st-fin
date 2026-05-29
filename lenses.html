@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>20 Geometric Lenses — ST-Fin Strategy</title>
+  <meta name="description" content="Explore all 20 geometric lenses: angle, distance, area, and centroid for each of the five ICS triangles.">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .lens-detail { margin-bottom:64px; scroll-margin-top:80px; }
+    .lens-detail h3 { display:flex; align-items:center; gap:12px; }
+    .lens-detail .num {
+      font-family:var(--font-display); font-size:12px; font-weight:700;
+      background:rgba(255,255,255,0.06); border:1px solid var(--border);
+      border-radius:6px; padding:2px 10px; color:var(--text-3);
+    }
+    .lens-filter { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:40px; }
+    .filter-btn {
+      font-family:var(--font-display); font-size:13px; font-weight:600;
+      padding:8px 18px; border-radius:8px; border:1px solid var(--border);
+      background:transparent; color:var(--text-3); cursor:pointer; transition:all .2s;
+    }
+    .filter-btn:hover { color:var(--text-1); border-color:rgba(255,255,255,0.2); }
+    .filter-btn.active { border-color:var(--center); color:var(--center); background:rgba(0,229,255,0.06); }
+  </style>
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><img src="logo.webp" alt="Smart Trader AI"></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="framework.html">Framework</a>
+      <a href="lenses.html">20 Lenses</a>
+      <a href="strategy.html">Strategy</a>
+      <a href="ai.html">AI Integration</a>
+      <a href="pricing.html" class="nav-cta">Get Access</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+  </div>
+</nav>
+<div class="nav-mobile">
+  <a href="index.html">Home</a>
+  <a href="framework.html">Framework</a>
+  <a href="lenses.html">20 Lenses</a>
+  <a href="strategy.html">Strategy</a>
+  <a href="ai.html">AI Integration</a>
+  <a href="pricing.html">Get Access</a>
+</div>
+
+<!-- ── Header ── -->
+<header class="page-header">
+  <div class="page-header-inner">
+    <div class="section-label fade-up">Observation</div>
+    <h1 class="section-title fade-up d1" style="font-size:clamp(32px,5vw,52px);">The 20 Geometric Lenses</h1>
+    <p class="section-desc fade-up d2">
+      Four metrics applied to five triangles. Each lens is a raw, unfiltered measurement
+      plotted directly — no smoothing, no reshaping. What you see is what the triangle produced.
+    </p>
+  </div>
+</header>
+
+<div class="divider"></div>
+
+<section class="section">
+  <div class="section-inner">
+
+    <!-- ── Quick Nav ── -->
+    <div class="lens-filter observe">
+      <a href="#ceiling-lenses" class="filter-btn" style="border-color:rgba(239,83,80,0.4); color:var(--ceil);">▲ Ceiling</a>
+      <a href="#center-lenses" class="filter-btn" style="border-color:rgba(0,229,255,0.4); color:var(--center);">◆ Center</a>
+      <a href="#floor-lenses" class="filter-btn" style="border-color:rgba(38,166,154,0.4); color:var(--floor);">▼ Floor</a>
+      <a href="#pnu-lenses" class="filter-btn" style="border-color:rgba(255,152,0,0.4); color:var(--pin-up);">△ Pin Up</a>
+      <a href="#pnd-lenses" class="filter-btn" style="border-color:rgba(171,71,188,0.4); color:var(--pin-dn);">▽ Pin Down</a>
+    </div>
+
+    <!-- ═══ CEILING LENSES ═══ -->
+    <div id="ceiling-lenses" style="scroll-margin-top:80px;">
+      <h2 class="observe" style="color:var(--ceil); font-family:var(--font-display); font-size:24px; margin-bottom:32px;">▲ Ceiling Lenses</h2>
+
+      <div class="lens-detail observe" id="lens-1">
+        <h3><span class="num">01</span> <span style="color:var(--ceil);">Ceiling Angle</span></h3>
+        <p>Tracks the ICS angle between the frozen ceiling and the current bar's high. Negative when the high sits below the ceiling. When the reading reaches the boundary of its range, notable changes in price behavior tend to follow.</p>
+        <div class="snapshot">
+          <a href="https://www.tradingview.com/x/oPMjW3id/" target="_blank"><img src="https://s3.tradingview.com/snapshots/o/oPMjW3id.png" alt="Ceiling Angle" loading="lazy"></a>
+          <div class="snapshot-caption">Ceiling Angle on SOLUSD daily. The angle moves in a negative range. When it reaches the boundary, price behavior shifts at the marked points.</div>
+        </div>
+      </div>
+
+      <div class="lens-detail observe" id="lens-2">
+        <h3><span class="num">02</span> <span style="color:var(--ceil);">Ceiling Distance</span></h3>
+        <p>Signed displacement between the frozen ceiling and the current high in ICS space. Negative when the high is below the ceiling, approaching zero as the high nears the ceiling level.</p>
+        <div class="snapshot">
+          <a href="https://www.tradingview.com/x/4Exb3d4E/" target="_blank"><img src="https://s3.tradingview.com/snapshots/4/4Exb3d4E.png" alt="Ceiling Distance" loading="lazy"></a>
+          <div class="snapshot-caption">Ceiling Distance on AAPL daily. Boundary extremes align with visible shifts in price behavior.</div>
+        </div>
+      </div>
+
+      <div class="lens-detail observe" id="lens-3">
+        <h3><span class="num">03</span> <span style="color:var(--ceil);">Ceiling Area</span></h3>
+        <p>Combines time and price displacement into a single non-negative reading. Expands as the triangle grows, contracts when vertical displacement narrows faster than horizontal extends.</p>
+        <div class="snapshot">
+          <a href="https://www.tradingview.com/x/MRgXSjcF/" target="_blank"><img src="https://s3.tradingview.com/snapshots/m/MRgXSjcF.png" alt="Ceiling Area" loading="lazy"></a>
+          <div class="snapshot-caption">Ceiling Area on daily chart. Area builds gradually and contracts when the vertical displacement narrows.</div>
+        </div>
+      </div>
+
+      <div class="lens-detail observe" id="lens-4">
+        <h3><span class="num">04</span> <span style="color:var(--ceil);">Ceiling Centroid</span></h3>
+        <p>The geometric balance point of the Ceiling triangle. Shifts in centroid often lead visible price turns. The same numeric level can produce different outcomes — demonstrating that context matters.</p>
+        <div class="snapshot">
+          <a href="https://www.tradingview.com/x/zYMmvcdi/" target="_blank"><img src="https://s3.tradingview.com/snapshots/z/zYMmvcdi.png" alt="Ceiling Centroid" loading="lazy"></a>
+          <div class="snapshot-caption">Ceiling Centroid reaching zero at two separate points — different outcomes from the same level.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider" style="margin:48px 0;"></div>
+
+    <!-- ═══ CENTER LENSES ═══ -->
+    <div id="center-lenses" style="scroll-margin-top:80px;">
+      <h2 class="observe" style="color:var(--center); font-family:var(--font-display); font-size:24px; margin-bottom:32px;">◆ Center Lenses</h2>
+
+      <div class="lens-detail observe" id="lens-5">
+        <h3><span class="num">05</span> <span style="color:var(--center);">Center Angle</span></h3>
+        <p>Measures the angle between the frozen center and the current bar's midpoint. Crosses zero as the midpoint moves above or below the structural center. When it reaches the boundary of its range, notable price shifts tend to follow.</p>
+        <div class="snapshot">
+          <a href="https://www.tradingview.com/x/K5k0Zdnt/" target="_blank"><img src="https://s3.tradingview.com/snapshots/k/K5k0Zdnt.png" alt="Center Angle" loading="lazy"></a>
+          <div class="snapshot-caption">Center Angle crossing zero and reaching the upper boundary of its range.</div>
+        </div>
+      </div>
+
+      <div class="lens-detail observe" id="lens-6">
+        <h3><span class="num">06</span> <span style="color:var(--center);">Center Distance</span></h3>
+        <p>Signed displacement from the frozen center to the current midpoint. Shows how far the midpoint has stretched from the center.</p>
+        <div class="snapshot">
+          <a href="https://www.tradingview.com/x/q8KIAynL/" target="_blank"><img src="https://s3.tradingview.com/snapshots/q/q8KIAynL.png" alt="Center Distance" loading="lazy"></a>
+          <div class="snapshot-caption">Center Distance (cyan) and Ceiling Distance (red) read together — displacement from both anchors simultaneously.</div>
+        </div>
+      </div>
+
+      <div class="lens-detail observe" id="lens-7">
+        <h3><span class="num">07</span> <span style="color:var(--center);">Center Area</span></h3>
+        <p>Geometric footprint of the Center triangle. Expands as the move develops, peaks, then contracts — tracking the weight and maturity of the current structure.</p>
+        <div class="snapshot">
+          <a href="https://www.tradingview.com/x/lt97G4bM/" target="_blank"><img src="https://s3.tradingview.com/snapshots/l/lt97G4bM.png" alt="Center Area" loading="lazy"></a>
+          <div class="snapshot-caption">Center Area reaching peak before contracting. Direction changes align with price shifts.</div>
+        </div>
+      </div>
+
+      <div class="lens-detail observe" id="lens-8">
+        <h3><span class="num">08</span> <span style="color:var(--center);">Center Centroid</span></h3>
+        <p>Tracks where the Center triangle's balance is concentrated. Remains stable within cycles, drops sharply at anchor resets — raw centroid changes, not smoothed signals.</p>
+        <div class="snapshot">
+          <a href="https://www.tradingview.com/x/TUQY7sDr/" target="_blank"><img src="https://s3.tradingview.com/snapshots/t/TUQY7sDr.png" alt="Center Centroid" loading="lazy"></a>
+          <div class="snapshot-caption">Center Centroid — stable within cycles, sharp drops at anchor resets.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider" style="margin:48px 0;"></div>
+
+    <!-- ═══ FLOOR LENSES ═══ -->
+    <div id="floor-lenses" style="scroll-margin-top:80px;">
+      <h2 class="observe" style="color:var(--floor); font-family:var(--font-display); font-size:24px; margin-bottom:32px;">▼ Floor Lenses</h2>
+
+      <div class="lens-detail observe" id="lens-9">
+        <h3><span class="num">09</span> <span style="color:var(--floor);">Floor Angle</span></h3>
+        <p>Slope between the frozen floor and the current bar's low. Stays positive while price holds above the floor. Sharp drops mark anchor resets, not ordinary bearish signals.</p>
+        <div class="snapshot">
+          <a href="https://www.tradingview.com/x/1jLD3qbg/" target="_blank"><img src="https://s3.tradingview.com/snapshots/1/1jLD3qbg.png" alt="Floor Angle" loading="lazy"></a>
+        </div>
+      </div>
+
+      <div class="lens-detail observe" id="lens-10">
+        <h3><span class="num">10</span> <span style="color:var(--floor);">Floor Distance</span></h3>
+        <p>Pure vertical separation from the frozen floor, removing the time-slope component. More directly tied to the lower-side price relationship.</p>
+        <div class="snapshot">
+          <a href="https://www.tradingview.com/x/L1ea8ywt/" target="_blank"><img src="https://s3.tradingview.com/snapshots/l/L1ea8ywt.png" alt="Floor Distance" loading="lazy"></a>
+        </div>
+      </div>
+
+      <div class="lens-detail observe" id="lens-11">
+        <h3><span class="num">11</span> <span style="color:var(--floor);">Floor Area</span></h3>
+        <p>Geometric footprint from the floor side. Read alongside Ceiling Area to see whether geometric weight builds on one side or both simultaneously.</p>
+        <div class="snapshot">
+          <a href="https://www.tradingview.com/x/r0DoJBkC/" target="_blank"><img src="https://s3.tradingview.com/snapshots/r/r0DoJBkC.png" alt="Floor Area" loading="lazy"></a>
+          <div class="snapshot-caption">Floor Area (cyan) and Ceiling Area (red) expanding in parallel — geometric weight on both sides.</div>
+        </div>
+      </div>
+
+      <div class="lens-detail observe" id="lens-12">
+        <h3><span class="num">12</span> <span style="color:var(--floor);">Floor Centroid</span></h3>
+        <p>Balance point of the Floor triangle. Read together with Center and Ceiling centroids to see how balance is distributed across the whole structure.</p>
+        <div class="snapshot">
+          <a href="https://www.tradingview.com/x/JJ7jPVvd/" target="_blank"><img src="https://s3.tradingview.com/snapshots/j/JJ7jPVvd.png" alt="Floor Centroid" loading="lazy"></a>
+          <div class="snapshot-caption">Three centroids — Floor, Center, Ceiling — tightly clustered and broadly parallel. Drops mark anchor resets.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider" style="margin:48px 0;"></div>
+
+    <!-- ═══ PIN UP LENSES ═══ -->
+    <div id="pnu-lenses" style="scroll-margin-top:80px;">
+      <h2 class="observe" style="color:var(--pin-up); font-family:var(--font-display); font-size:24px; margin-bottom:32px;">△ Pin Up Lenses</h2>
+
+      <div class="lens-detail observe" id="lens-13">
+        <h3><span class="num">13</span> <span style="color:var(--pin-up);">Pin Up Angle</span></h3>
+        <p>Pulse-like behavior — flat near zero most of the time, spiking sharply on bars with geometrically significant upper wicks. Unlike main lenses, this one is event-driven.</p>
+        <div class="snapshot">
+          <a href="https://www.tradingview.com/x/4HQUXKin/" target="_blank"><img src="https://s3.tradingview.com/snapshots/4/4HQUXKin.png" alt="Pin Up Angle" loading="lazy"></a>
+        </div>
+      </div>
+
+      <div class="lens-detail observe" id="lens-14">
+        <h3><span class="num">14</span> <span style="color:var(--pin-up);">Pin Up Distance</span></h3>
+        <p>ICS-normalized length of the upper wick itself. Spends most time in a low range near zero. Rare excursions into the upper zone mark candles with notably long upper shadows.</p>
+        <div class="snapshot">
+          <a href="https://www.tradingview.com/x/ivFJC2Om/" target="_blank"><img src="https://s3.tradingview.com/snapshots/i/ivFJC2Om.png" alt="Pin Up Distance" loading="lazy"></a>
+        </div>
+      </div>
+
+      <div class="lens-detail observe" id="lens-15">
+        <h3><span class="num">15</span> <span style="color:var(--pin-up);">Pin Up Area</span></h3>
+        <p>When this reading stays flat near zero for an extended stretch, bar after bar produces no meaningful upper shadow. That sustained silence — the absence of upper-wick rejection — often coincides with a clean directional move.</p>
+        <div class="snapshot">
+          <a href="https://www.tradingview.com/x/FuW3nW6V/" target="_blank"><img src="https://s3.tradingview.com/snapshots/f/FuW3nW6V.png" alt="Pin Up Area" loading="lazy"></a>
+        </div>
+      </div>
+
+      <div class="lens-detail observe" id="lens-16">
+        <h3><span class="num">16</span> <span style="color:var(--pin-up);">Pin Up Centroid</span></h3>
+        <p>Runs flat during sustained moves, with brief pulses marking bars where the wick geometry changed — potential points of interest along a trend.</p>
+        <div class="snapshot">
+          <a href="https://www.tradingview.com/x/jlOga5nf/" target="_blank"><img src="https://s3.tradingview.com/snapshots/j/jlOga5nf.png" alt="Pin Up Centroid" loading="lazy"></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider" style="margin:48px 0;"></div>
+
+    <!-- ═══ PIN DOWN LENSES ═══ -->
+    <div id="pnd-lenses" style="scroll-margin-top:80px;">
+      <h2 class="observe" style="color:var(--pin-dn); font-family:var(--font-display); font-size:24px; margin-bottom:32px;">▽ Pin Down Lenses</h2>
+
+      <div class="lens-detail observe" id="lens-17">
+        <h3><span class="num">17</span> <span style="color:var(--pin-dn);">Pin Down Angle</span></h3>
+        <p>Rare deep negative spikes — reaching -80 to -90 degrees — marking geometrically rare lower-wick events. Over eighteen months, only a few such spikes appear.</p>
+        <div class="snapshot">
+          <a href="https://www.tradingview.com/x/QflCQJNz/" target="_blank"><img src="https://s3.tradingview.com/snapshots/q/QflCQJNz.png" alt="Pin Down Angle" loading="lazy"></a>
+        </div>
+      </div>
+
+      <div class="lens-detail observe" id="lens-18">
+        <h3><span class="num">18</span> <span style="color:var(--pin-dn);">Pin Down Distance</span></h3>
+        <p>Continuously oscillating — the normal rhythm of lower-wick lengths bar after bar. The outlier drops that break below the usual boundary mark abnormally long lower shadows.</p>
+        <div class="snapshot">
+          <a href="https://www.tradingview.com/x/cFonGGk7/" target="_blank"><img src="https://s3.tradingview.com/snapshots/c/cFonGGk7.png" alt="Pin Down Distance" loading="lazy"></a>
+        </div>
+      </div>
+
+      <div class="lens-detail observe" id="lens-19">
+        <h3><span class="num">19</span> <span style="color:var(--pin-dn);">Pin Down Area</span></h3>
+        <p>Gains meaning primarily through combination. When Floor Area converges toward Pin Down Area, the structure is squeezed near the floor — a convergence that often aligns with visible shifts.</p>
+        <div class="snapshot">
+          <a href="https://www.tradingview.com/x/IIYXkkcl/" target="_blank"><img src="https://s3.tradingview.com/snapshots/i/IIYXkkcl.png" alt="Pin Down Area" loading="lazy"></a>
+        </div>
+      </div>
+
+      <div class="lens-detail observe" id="lens-20">
+        <h3><span class="num">20</span> <span style="color:var(--pin-dn);">Pin Down Centroid</span></h3>
+        <p>Each sharp pulse aligns with a discrete jump on the price chart. The sequence of pulses traces the step-by-step rhythm of the market's advance — a geometric mirror of the market's own cadence.</p>
+        <div class="snapshot">
+          <a href="https://www.tradingview.com/x/bwzjFSBT/" target="_blank"><img src="https://s3.tradingview.com/snapshots/b/bwzjFSBT.png" alt="Pin Down Centroid" loading="lazy"></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout observe" style="margin-top:48px;">
+      <p>
+        <strong>Reading lenses together</strong> adds a second layer of observation.
+        A single lens describes one geometric relationship. When two or more lenses are placed
+        on the same pane, their interaction — convergence, divergence, crossing — reveals patterns
+        that no single lens shows on its own. The same raw data, observed as a set of relationships.
+      </p>
+    </div>
+
+    <div class="snapshot observe">
+      <a href="https://www.tradingview.com/x/QbJnTpzl/" target="_blank"><img src="https://s3.tradingview.com/snapshots/q/QbJnTpzl.png" alt="Combined lenses" loading="lazy"></a>
+      <div class="snapshot-caption">Ceiling Angle (red) and Center Angle (cyan) read together — convergence points align with price shifts.</div>
+    </div>
+
+    <div style="text-align:center; margin-top:48px;" class="observe">
+      <a href="strategy.html" class="btn btn-primary">Turn Lenses into Rules →</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="framework.html">Framework</a>
+      <a href="lenses.html">20 Lenses</a>
+      <a href="strategy.html">Strategy</a>
+      <a href="ai.html">AI Integration</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="https://www.tradingview.com/u/ata_sabanci/" target="_blank">TradingView</a>
+      <a href="https://x.com/sabanci_ata" target="_blank">X (Twitter)</a>
+    </div>
+    <p class="footer-copy">© 2026 ST-Fin by ata_sabanci. Not financial advice. You observe. You decide. You own the result.</p>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

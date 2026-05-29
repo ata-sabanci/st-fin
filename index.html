@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ST-Fin — AI-Assisting Geometric Strategy for TradingView</title>
+  <meta name="description" content="Measure markets through geometry. 20 geometric lenses, 5 triangles, ICS normalization. A TradingView strategy built for AI-assisted exploration.">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .tri-canvas { position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+    .tri-shape {
+      position:absolute; width:0; height:0; opacity:0.035;
+      border-left: 60px solid transparent; border-right: 60px solid transparent;
+    }
+    .tri-shape.t1 { border-bottom:100px solid var(--ceil); top:15%; left:10%; transform:rotate(15deg); }
+    .tri-shape.t2 { border-bottom:80px solid var(--center); top:30%; right:15%; transform:rotate(-20deg); }
+    .tri-shape.t3 { border-bottom:120px solid var(--floor); bottom:20%; left:30%; transform:rotate(5deg); }
+    .tri-shape.t4 { border-bottom:70px solid var(--pin-up); top:60%; right:8%; transform:rotate(35deg); }
+    .tri-shape.t5 { border-bottom:90px solid var(--pin-dn); bottom:10%; right:40%; transform:rotate(-10deg); }
+
+    .feature-icon-row {
+      display:flex; gap:16px; margin-bottom:40px; flex-wrap:wrap;
+    }
+    .feature-icon-item {
+      display:flex; align-items:center; gap:8px; font-family:var(--font-display);
+      font-size:14px; color:var(--text-2); font-weight:500;
+    }
+    .feature-icon-item .dot {
+      width:10px; height:10px; border-radius:50%; flex-shrink:0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><img src="logo.webp" alt="Smart Trader AI"></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="framework.html">Framework</a>
+      <a href="lenses.html">20 Lenses</a>
+      <a href="strategy.html">Strategy</a>
+      <a href="ai.html">AI Integration</a>
+      <a href="pricing.html" class="nav-cta">Get Access</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+  </div>
+</nav>
+<div class="nav-mobile">
+  <a href="index.html">Home</a>
+  <a href="framework.html">Framework</a>
+  <a href="lenses.html">20 Lenses</a>
+  <a href="strategy.html">Strategy</a>
+  <a href="ai.html">AI Integration</a>
+  <a href="pricing.html">Get Access</a>
+</div>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="tri-canvas">
+    <div class="tri-shape t1"></div>
+    <div class="tri-shape t2"></div>
+    <div class="tri-shape t3"></div>
+    <div class="tri-shape t4"></div>
+    <div class="tri-shape t5"></div>
+  </div>
+  <div class="hero-inner">
+    <img src="logo.webp" alt="Smart Trader AI — Geometric Strategy" class="hero-logo fade-up">
+    <div class="hero-badge fade-up d1">△ TradingView Strategy · Pine Script v6</div>
+    <h1 class="fade-up d2">
+      Measure Markets<br>Through <span class="accent">Geometry</span>
+    </h1>
+    <p class="subtitle fade-up d3">
+      Five triangles. Four metrics. Twenty geometric lenses.
+      A TradingView strategy that translates price into structured measurement,
+      designed for AI-assisted exploration.
+    </p>
+
+    <div class="feature-icon-row fade-up d4">
+      <div class="feature-icon-item"><div class="dot" style="background:var(--ceil)"></div> Ceiling</div>
+      <div class="feature-icon-item"><div class="dot" style="background:var(--center)"></div> Center</div>
+      <div class="feature-icon-item"><div class="dot" style="background:var(--floor)"></div> Floor</div>
+      <div class="feature-icon-item"><div class="dot" style="background:var(--pin-up)"></div> Pin Up</div>
+      <div class="feature-icon-item"><div class="dot" style="background:var(--pin-dn)"></div> Pin Down</div>
+    </div>
+
+    <div class="hero-btns fade-up d5">
+      <a href="pricing.html" class="btn btn-primary">Get Access →</a>
+      <a href="framework.html" class="btn btn-outline">Learn How It Works</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Stats ── -->
+<section class="section" style="padding-top:40px; padding-bottom:40px;">
+  <div class="section-inner">
+    <div class="stats">
+      <div class="stat observe">
+        <div class="stat-num">5</div>
+        <div class="stat-label">Triangle Types</div>
+      </div>
+      <div class="stat observe">
+        <div class="stat-num">20</div>
+        <div class="stat-label">Geometric Lenses</div>
+      </div>
+      <div class="stat observe">
+        <div class="stat-num">10<sup style="font-size:20px;">39</sup></div>
+        <div class="stat-label">Configuration Space</div>
+      </div>
+      <div class="stat observe">
+        <div class="stat-num">0</div>
+        <div class="stat-label">Code Editing Required</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── What Is ST-Fin ── -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label observe">The Idea</div>
+    <h2 class="section-title observe">What if price movement could be measured with geometry?</h2>
+    <p class="section-desc observe">
+      Instead of viewing price as a single line, ST-Fin examines market behavior through
+      triangular measurements: angle, distance, area, and centroid. The triangle is not
+      decorative — it is a structured measurement method that translates price movement
+      into geometric relationships you can test, tune, and explore.
+    </p>
+
+    <div class="snapshot observe">
+      <a href="https://www.tradingview.com/x/GjVeYplj/" target="_blank">
+        <img src="https://s3.tradingview.com/snapshots/g/GjVeYplj.png" alt="Five triangle types on chart" loading="lazy">
+      </a>
+      <div class="snapshot-caption">
+        Five triangle types drawn on a daily chart. Each connects a frozen reference level
+        to a specific point on the current candle, producing four independent geometric metrics.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Core Concepts ── -->
+<section class="section" style="background: var(--bg-1);">
+  <div class="section-inner">
+    <div class="section-label observe">Core Architecture</div>
+    <h2 class="section-title observe">How It Works — In Three Steps</h2>
+
+    <div class="card-grid">
+      <div class="card card-center observe">
+        <div class="card-icon">📐</div>
+        <h3>1. ICS Normalization</h3>
+        <p>
+          Both chart axes are made dimensionless.
+          Vertical: log(price) / σ (Yang-Zhang volatility).
+          Horizontal: bars / lookback.
+          This makes angles and areas comparable across symbols, timeframes, and volatility.
+        </p>
+      </div>
+      <div class="card card-floor observe">
+        <div class="card-icon">🧊</div>
+        <h3>2. Frozen Anchors</h3>
+        <p>
+          The strategy scans a lookback window and freezes three levels:
+          Ceiling (highest high), Floor (lowest low), Center (geometric mean).
+          These stay fixed while price moves around them — a stable origin for measurement.
+        </p>
+      </div>
+      <div class="card card-pnu observe">
+        <div class="card-icon">📊</div>
+        <h3>3. Five Triangles × Four Metrics</h3>
+        <p>
+          Five triangles are constructed from the frozen anchors to the current bar.
+          Each produces angle, distance, area, and centroid — 20 geometric lenses
+          that evolve continuously, bar by bar.
+        </p>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:40px;" class="observe">
+      <a href="framework.html" class="btn btn-outline">Deep Dive into the Framework →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Five Triangles ── -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label observe">Five Perspectives</div>
+    <h2 class="section-title observe">Each Triangle Tells a Different Story</h2>
+    <p class="section-desc observe">
+      Three main triangles track how price moves relative to the upper, middle, and lower reference levels.
+      Two pin triangles isolate the candle's wick behavior — rejection patterns that often carry structural meaning.
+    </p>
+
+    <div class="card-grid">
+      <div class="card card-ceil observe">
+        <div class="card-icon" style="background:rgba(239,83,80,0.12);">▲</div>
+        <h3 style="color:var(--ceil);">Ceiling (HH → High)</h3>
+        <p>Tracks how the market's upper boundary behaves relative to the structural ceiling. Compression toward zero signals proximity to the reference.</p>
+      </div>
+      <div class="card card-center observe">
+        <div class="card-icon" style="background:rgba(0,229,255,0.12);">◆</div>
+        <h3 style="color:var(--center);">Center (Mid → Mid)</h3>
+        <p>Measures the directional lean — whether price favors the upper or lower half of the frozen structure. Uses geometric mean for proportional weighting.</p>
+      </div>
+      <div class="card card-floor observe">
+        <div class="card-icon" style="background:rgba(38,166,154,0.12);">▼</div>
+        <h3 style="color:var(--floor);">Floor (LL → Low)</h3>
+        <p>Tracks support behavior, compression near the lower boundary, or gradual lift away from the structural low.</p>
+      </div>
+      <div class="card card-pnu observe">
+        <div class="card-icon" style="background:rgba(255,152,0,0.12);">△</div>
+        <h3 style="color:var(--pin-up);">Pin Up (HH → Wick)</h3>
+        <p>Isolates upper wick rejection. A long upper shadow near the ceiling produces a geometric spike — quantified rejection from the upper zone.</p>
+      </div>
+      <div class="card card-pnd observe">
+        <div class="card-icon" style="background:rgba(171,71,188,0.12);">▽</div>
+        <h3 style="color:var(--pin-dn);">Pin Down (LL → Wick)</h3>
+        <p>Captures lower wick absorption. Measures buying pressure at the bottom of candles relative to the frozen floor.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 20 Lenses Preview ── -->
+<section class="section" style="background: var(--bg-1);">
+  <div class="section-inner">
+    <div class="section-label observe">20 Geometric Lenses</div>
+    <h2 class="section-title observe">Raw Measurements. No Smoothing. No Filtering.</h2>
+    <p class="section-desc observe">
+      Every lens plots the unaltered geometric output in the oscillator pane.
+      What you see is exactly what the triangle produced inside the ICS framework —
+      angles, distances, areas, and centroids as they were measured.
+    </p>
+
+    <div class="snapshot observe">
+      <a href="https://www.tradingview.com/x/tqj0DSrs/" target="_blank">
+        <img src="https://s3.tradingview.com/snapshots/t/tqj0DSrs.png" alt="20 lenses oscillator pane" loading="lazy">
+      </a>
+      <div class="snapshot-caption">
+        Four metrics × five triangles = twenty continuous geometric readings in the oscillator pane.
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:32px;" class="observe">
+      <a href="lenses.html" class="btn btn-outline">Explore All 20 Lenses →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Strategy System ── -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label observe">From Observation to Action</div>
+    <h2 class="section-title observe">20 Configurable Condition Slots</h2>
+    <p class="section-desc observe">
+      Each slot monitors any lens with five condition types and seven side options.
+      A quorum system lets you control how many must agree before a signal fires —
+      from permissive (any one) to restrictive (all must pass).
+    </p>
+
+    <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+      <div class="card observe">
+        <div class="stat-num" style="font-size:32px; margin-bottom:8px;">700</div>
+        <p style="font-size:14px;">Configurations per slot<br><span style="color:var(--text-3);">20 vars × 5 conditions × 7 sides</span></p>
+      </div>
+      <div class="card observe">
+        <div class="stat-num" style="font-size:32px; margin-bottom:8px;">245K</div>
+        <p style="font-size:14px;">With 2 active slots<br><span style="color:var(--text-3);">Structural combinations only</span></p>
+      </div>
+      <div class="card observe">
+        <div class="stat-num" style="font-size:32px; margin-bottom:8px;">1.4T</div>
+        <p style="font-size:14px;">With 5 active slots<br><span style="color:var(--text-3);">Before threshold tuning</span></p>
+      </div>
+      <div class="card observe">
+        <div class="stat-num" style="font-size:32px; margin-bottom:8px;">∞</div>
+        <p style="font-size:14px;">Continuous thresholds<br><span style="color:var(--text-3);">The floor, not the ceiling</span></p>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:40px;" class="observe">
+      <a href="strategy.html" class="btn btn-outline">Learn the Strategy System →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── AI Bridge ── -->
+<section class="section" style="background: var(--bg-1);">
+  <div class="section-inner">
+    <div class="section-label observe">AI as the Bridge</div>
+    <h2 class="section-title observe">Navigate the Space No Human Can Explore Manually</h2>
+    <p class="section-desc observe">
+      With 10<sup>39</sup> structural combinations, manual exploration hits a wall.
+      TradingView's AI Chart Copilot reads your chart in real time and helps you
+      interpret what the geometry is showing — turning a combinatorial search
+      into a guided conversation.
+    </p>
+
+    <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));">
+      <div class="card observe">
+        <div class="card-icon" style="background:rgba(0,229,255,0.12);">🤖</div>
+        <h3>AI Chart Copilot</h3>
+        <p>Works directly alongside your TradingView charts in the browser. Activate lenses, ask the Copilot to analyze — interactive exploration in real time.</p>
+        <div style="margin-top:16px;">
+          <a href="https://www.tradingview.com/blog/en/tradingview-ai-chart-copilot-beta-57730/" target="_blank" class="btn btn-outline" style="font-size:13px; padding:8px 16px;">Learn About Copilot →</a>
+        </div>
+      </div>
+      <div class="card observe">
+        <div class="card-icon" style="background:rgba(255,152,0,0.12);">📊</div>
+        <h3>CSV Export</h3>
+        <p>Export active lens readings as portable numerical data for deeper analysis. Each enabled lens appears as a named column alongside timestamp and price.</p>
+        <div style="margin-top:16px;">
+          <a href="ai.html" class="btn btn-outline" style="font-size:13px; padding:8px 16px;">Full AI Workflow →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="section" style="text-align:center;">
+  <div class="section-inner">
+    <h2 class="section-title observe" style="max-width:600px; margin:0 auto 20px;">
+      Ready to See Markets Through Geometry?
+    </h2>
+    <p class="section-desc observe" style="margin:0 auto 40px; text-align:center;">
+      72-hour free trial. Full access to all features. No code editing required.
+    </p>
+    <div class="observe" style="display:flex; justify-content:center; gap:14px; flex-wrap:wrap;">
+      <a href="pricing.html" class="btn btn-primary">Get Access →</a>
+      <a href="https://www.tradingview.com/script/7VaVDKeE-Smart-Trader-Final-Episode-AI-Assisting-Geometric-Strategy/" target="_blank" class="btn btn-outline">View on TradingView</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="framework.html">Framework</a>
+      <a href="lenses.html">20 Lenses</a>
+      <a href="strategy.html">Strategy</a>
+      <a href="ai.html">AI Integration</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="https://www.tradingview.com/u/ata_sabanci/" target="_blank">TradingView</a>
+      <a href="https://x.com/sabanci_ata" target="_blank">X (Twitter)</a>
+    </div>
+    <p class="footer-copy">
+      © 2026 ST-Fin by ata_sabanci. Not financial advice. You observe. You decide. You own the result.
+    </p>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
