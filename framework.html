@@ -1,335 +1,401 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Framework — ST-Fin Geometric Strategy</title>
-  <meta name="description" content="Learn how the ICS coordinate system, frozen anchors, and five triangle types work together to measure price geometrically.">
-  <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="The ICS framework: isotropic coordinate system, Yang-Zhang volatility, frozen anchors, and five triangles. See how price movement becomes scale-independent geometry.">
+<title>Framework · ST-Fin</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- ── Nav ── -->
 <nav class="nav">
-  <div class="nav-inner">
-    <a href="index.html" class="nav-logo"><img src="logo.webp" alt="Smart Trader AI"></a>
+  <div class="nav-in">
+    <a href="index.html" class="nav-logo"><b>ST-Fin</b></a>
+    <button class="nav-tg" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">&#9776;</button>
     <div class="nav-links">
       <a href="index.html">Home</a>
-      <a href="framework.html">Framework</a>
-      <a href="lenses.html">20 Lenses</a>
+      <a href="framework.html" class="on">Framework</a>
+      <a href="lenses.html">Lenses</a>
       <a href="strategy.html">Strategy</a>
-      <a href="ai.html">AI Integration</a>
+      <a href="ai.html">AI</a>
       <a href="pricing.html" class="nav-cta">Get Access</a>
     </div>
-    <button class="nav-toggle" aria-label="Menu">☰</button>
   </div>
 </nav>
-<div class="nav-mobile">
-  <a href="index.html">Home</a>
-  <a href="framework.html">Framework</a>
-  <a href="lenses.html">20 Lenses</a>
-  <a href="strategy.html">Strategy</a>
-  <a href="ai.html">AI Integration</a>
-  <a href="pricing.html">Get Access</a>
-</div>
+<div class="spacer"></div>
 
-<!-- ── Page Header ── -->
-<header class="page-header">
-  <div class="page-header-inner">
-    <div class="section-label fade-up">How It Works</div>
-    <h1 class="section-title fade-up d1" style="font-size:clamp(32px,5vw,52px);">The Geometric Framework</h1>
-    <p class="section-desc fade-up d2">
-      From raw price data to dimensionless geometric measurements.
-      Three building blocks that make angles and areas comparable
-      across any symbol, timeframe, or volatility regime.
-    </p>
+<!-- ═══ Hero ═══ -->
+<section class="hero" style="padding-bottom:3rem">
+  <div class="wrap">
+    <span class="eyebrow">The framework</span>
+    <h1 style="font-size:clamp(2rem,5vw,3.2rem)">The geometry beneath<br><span class="grad">the price</span></h1>
+    <p class="lead" style="margin:1.2rem auto 0">ICS &mdash; the Isotropic Coordinate System &mdash; turns raw price into dimensionless geometry. Here is exactly how it is built, layer by layer.</p>
   </div>
-</header>
+</section>
 
-<div class="divider"></div>
-
-<!-- ── ICS ── -->
-<section class="section">
-  <div class="section-inner">
-    <div class="content-block observe">
-      <h2>📐 ICS — Isotropic Coordinate System</h2>
-      <p>
-        On a trading chart, time moves horizontally and price moves vertically — but they don't share
-        the same unit. The same price movement can appear steeper or flatter depending on zoom, scaling,
-        or timeframe. This makes raw visual angles inconsistent.
-      </p>
-      <p>
-        The ICS framework solves this by making both axes dimensionless:
-      </p>
-
-      <div class="callout">
-        <p>
-          <strong>Vertical axis:</strong> y = log(price) / σ — where σ is the Yang-Zhang volatility estimate<br>
-          <strong>Horizontal axis:</strong> x = bars / lookback — normalized time displacement
-        </p>
+<!-- ═══ Step 1: dimensionless axes ═══ -->
+<section class="sec sec-line">
+  <div class="wrap">
+    <span class="eyebrow">Layer 1 · The coordinate system</span>
+    <h2>Two axes, both dimensionless</h2>
+    <div class="split">
+      <div>
+        <p class="lead" style="font-size:1.05rem">A raw price chart has a problem: a $5 move on a $20 stock is enormous, but on Bitcoin it is noise. The same angle means different things on different charts.</p>
+        <p class="muted" style="margin-top:1rem">ICS removes the units entirely:</p>
+        <div class="codeblock">vertical&nbsp;&nbsp; y = log(price) / &sigma;<br>horizontal&nbsp;x = bars / lookback</div>
+        <p class="muted" style="margin-top:1rem">The vertical axis is log-price divided by volatility. The horizontal axis is bar count divided by the lookback window. Both become pure numbers &mdash; so an angle of 45&deg; carries the same meaning on gold, on EUR/USD, and on a penny stock.</p>
+        <div class="note"><b>Why "isotropic"?</b> The scaling holds for a given (&sigma;, lookback) pair &mdash; it is a model convention that makes measurements comparable, not a claim that markets are physically uniform.</div>
       </div>
-
-      <p>
-        Inside this normalized space, triangle measurements are calculated <em>mathematically</em>,
-        not visually. Price displacement becomes <code>dy</code>, time displacement becomes <code>dx</code>,
-        the angle comes from <code>atan(dy/dx)</code>, and area from <code>0.5 × |dy| × |dx|</code>.
-      </p>
-      <p>
-        This is what makes ICS triangles different from ordinary chart drawings:
-        they are calculated structures, not visual impressions.
-      </p>
-    </div>
-
-    <!-- ── Interactive Calculator ── -->
-    <div class="demo-box observe" id="triangle-calc">
-      <h4>⚡ Live ICS Triangle Calculator</h4>
-      <p style="color:var(--text-3); font-size:14px; margin-bottom:20px;">
-        Adjust the values below to see how angle, distance, area, and centroid change in real time.
-      </p>
-
-      <div class="demo-controls">
-        <div class="demo-control">
-          <label>Target Price <span class="val" id="val-price">105</span></label>
-          <input type="range" id="calc-price" min="50" max="200" value="105" step="1">
+      <div class="demo" style="margin:0">
+        <div class="demo-head"><span class="dot"></span><b>Scale independence · interactive</b></div>
+        <div class="ctrl">
+          <label>Symbol scale</label>
+          <input type="range" min="0" max="3" step="1" value="1" id="f1-scale">
+          <span class="v" id="f1-scale-v">—</span>
         </div>
-        <div class="demo-control">
-          <label>Anchor Price <span class="val" id="val-anchor">100</span></label>
-          <input type="range" id="calc-anchor" min="50" max="200" value="100" step="1">
-        </div>
-        <div class="demo-control">
-          <label>Bars Since Anchor <span class="val" id="val-bars">10</span></label>
-          <input type="range" id="calc-bars" min="1" max="100" value="10" step="1">
-        </div>
-        <div class="demo-control">
-          <label>Lookback <span class="val" id="val-lookback">23</span></label>
-          <input type="range" id="calc-lookback" min="5" max="100" value="23" step="1">
-        </div>
-        <div class="demo-control">
-          <label>Sigma (σ) <span class="val" id="val-sigma">0.02</span></label>
-          <input type="range" id="calc-sigma" min="0.005" max="0.1" value="0.02" step="0.001">
-        </div>
-      </div>
-
-      <div class="demo-output">
-        <div class="demo-metric">
-          <div class="label">θ Angle</div>
-          <div class="value" id="out-angle" style="color:var(--floor);">0°</div>
-        </div>
-        <div class="demo-metric">
-          <div class="label">dy Distance</div>
-          <div class="value" id="out-distance" style="color:var(--center);">0</div>
-        </div>
-        <div class="demo-metric">
-          <div class="label">A Area</div>
-          <div class="value" id="out-area" style="color:var(--pin-up);">0</div>
-        </div>
-        <div class="demo-metric">
-          <div class="label">C̄ Centroid</div>
-          <div class="value" id="out-centroid" style="color:var(--pin-dn);">0</div>
-        </div>
+        <div class="canvas-box" style="height:260px"><canvas id="f1-canvas"></canvas></div>
+        <div class="readout" id="f1-readout">—</div>
       </div>
     </div>
   </div>
 </section>
 
-<div class="divider"></div>
-
-<!-- ── Frozen Anchors ── -->
-<section class="section" style="background:var(--bg-1);">
-  <div class="section-inner">
-    <div class="content-block observe">
-      <h2>🧊 Frozen Anchors — The Fixed Reference</h2>
-      <p>
-        Before any triangle can be measured, the model needs a fixed origin — a point that
-        does not move while the market continues around it. Without a stable reference,
-        geometric measurements would shift every bar.
-      </p>
-      <p>
-        The strategy scans a lookback window (default: 23 bars) and identifies three structural levels:
-      </p>
-
-      <div class="card-grid" style="grid-template-columns:repeat(3, 1fr); margin:32px 0;">
-        <div class="card" style="text-align:center;">
-          <div style="color:var(--ceil); font-family:var(--font-display); font-size:28px; font-weight:700;">Ceiling</div>
-          <p style="margin-top:8px;">Highest High in the lookback window</p>
+<!-- ═══ Step 2: Yang-Zhang ═══ -->
+<section class="sec sec-line">
+  <div class="wrap">
+    <span class="eyebrow">Layer 2 · Volatility</span>
+    <h2>Why Yang-Zhang, not ATR</h2>
+    <div class="split split-rev">
+      <div>
+        <p class="lead" style="font-size:1.05rem">The vertical axis divides by &sigma;. The quality of that &sigma; matters enormously &mdash; and most indicators use a crude one.</p>
+        <p class="muted" style="margin-top:1rem">The Yang-Zhang estimator is the academic gold standard for volatility. It combines three components:</p>
+        <div class="grid" style="gap:.7rem;margin-top:1rem">
+          <div class="card" style="padding:1.1rem"><h4 style="color:var(--cyan)">Overnight gaps</h4><p style="margin-top:.2rem">close-to-open jumps, which gold and many assets show constantly</p></div>
+          <div class="card" style="padding:1.1rem"><h4 style="color:var(--green)">Open-to-close drift</h4><p style="margin-top:.2rem">the intraday directional component</p></div>
+          <div class="card" style="padding:1.1rem"><h4 style="color:var(--amber)">Rogers-Satchell range</h4><p style="margin-top:.2rem">the high-low-open-close intrabar range, drift-independent</p></div>
         </div>
-        <div class="card" style="text-align:center;">
-          <div style="color:var(--center); font-family:var(--font-display); font-size:28px; font-weight:700;">Center</div>
-          <p style="margin-top:8px;">Geometric mean √(HH × LL)</p>
+        <p class="muted" style="margin-top:1rem">ATR ignores gaps. Close-to-close ignores intrabar range. Yang-Zhang captures all of it &mdash; the most accurate single &sigma; available, which is exactly what a coordinate system needs.</p>
+      </div>
+      <div class="demo" style="margin:0">
+        <div class="demo-head"><span class="dot"></span><b>Estimator comparison · interactive</b></div>
+        <div class="ctrl">
+          <label>Gap size</label>
+          <input type="range" min="0" max="100" value="40" id="f2-gap">
+          <span class="v" id="f2-gap-v">—</span>
         </div>
-        <div class="card" style="text-align:center;">
-          <div style="color:var(--floor); font-family:var(--font-display); font-size:28px; font-weight:700;">Floor</div>
-          <p style="margin-top:8px;">Lowest Low in the lookback window</p>
+        <div class="canvas-box" style="height:240px"><canvas id="f2-canvas"></canvas></div>
+        <div class="legend">
+          <span><span class="d" style="background:var(--cyan)"></span> Yang-Zhang</span>
+          <span><span class="d" style="background:var(--tx-3)"></span> Close-to-close</span>
         </div>
-      </div>
-
-      <p>
-        These levels are <strong>frozen</strong> at the bar where the scan completes.
-        From that moment, the anchor holds still. When the close breaks above the ceiling
-        or below the floor, the anchor resets and a new cycle begins.
-      </p>
-    </div>
-
-    <div class="snapshot observe">
-      <a href="https://www.tradingview.com/x/xGhtUsvi/" target="_blank">
-        <img src="https://s3.tradingview.com/snapshots/x/xGhtUsvi.png" alt="Frozen anchor levels" loading="lazy">
-      </a>
-      <div class="snapshot-caption">
-        Frozen anchor levels on a daily chart. Ceiling, Floor, and Center are locked at the freeze bar
-        and held fixed. When the close breaks the ceiling or floor, the anchor resets.
-      </div>
-    </div>
-
-    <div class="callout observe">
-      <p>
-        <strong>Why 23?</strong> The default lookback of 23 is a prime number near a typical
-        trading month length, but not directly aligned with common cycle lengths (5, 10, 14, 20, 21).
-        This reduces harmonic overlap. The period is fully adjustable.
-      </p>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- ── Five Triangle Types ── -->
-<section class="section">
-  <div class="section-inner">
-    <div class="section-label observe">Five Triangle Types</div>
-    <h2 class="section-title observe">Each Shape Measures Something Different</h2>
-    <p class="section-desc observe">
-      Three main right triangles track price relative to the upper, middle, and lower reference.
-      Two pin triangles isolate the candle's shadow behavior — upper and lower wick rejection.
-    </p>
-
-    <!-- Ceiling -->
-    <div class="content-block observe" style="margin-top:48px;">
-      <h3 style="color:var(--ceil);">▲ Ceiling — HH → High</h3>
-      <p>
-        Connects the frozen highest high to the current bar's high.
-        Tracks how the market's upper boundary behaves relative to the structural ceiling.
-        When the high sits below the frozen ceiling, the angle is negative — price is compressing beneath the reference.
-      </p>
-      <div class="snapshot">
-        <a href="https://www.tradingview.com/x/Pf4Htf5J/" target="_blank">
-          <img src="https://s3.tradingview.com/snapshots/p/Pf4Htf5J.png" alt="Ceiling triangle" loading="lazy">
-        </a>
-      </div>
-    </div>
-
-    <!-- Center -->
-    <div class="content-block observe">
-      <h3 style="color:var(--center);">◆ Center — Mid → Mid</h3>
-      <p>
-        Connects the frozen geometric mean to the current bar's geometric mean (√(High × Low)).
-        Captures the general directional lean — whether price favors the upper or lower half of the frozen range.
-        Both endpoints use geometric mean for proportional weighting.
-      </p>
-      <div class="snapshot">
-        <a href="https://www.tradingview.com/x/NHaY5uip/" target="_blank">
-          <img src="https://s3.tradingview.com/snapshots/n/NHaY5uip.png" alt="Center triangle" loading="lazy">
-        </a>
-      </div>
-    </div>
-
-    <!-- Floor -->
-    <div class="content-block observe">
-      <h3 style="color:var(--floor);">▼ Floor — LL → Low</h3>
-      <p>
-        Connects the frozen lowest low to the current bar's low.
-        Tracks support behavior, compression near the lower boundary, or gradual lift away
-        from the structural low. Mirrors the Ceiling triangle from the opposite direction.
-      </p>
-      <div class="snapshot">
-        <a href="https://www.tradingview.com/x/LnN26cBx/" target="_blank">
-          <img src="https://s3.tradingview.com/snapshots/l/LnN26cBx.png" alt="Floor triangle" loading="lazy">
-        </a>
-      </div>
-    </div>
-
-    <!-- Pin Up -->
-    <div class="content-block observe">
-      <h3 style="color:var(--pin-up);">△ Pin Up — HH → Upper Wick</h3>
-      <p>
-        Isolates the upper wick relative to the frozen ceiling.
-        Three vertices form a non-right triangle: frozen HH (A), current bar's high (B),
-        and body top (C). The angle at A captures how much the wick fans out as seen from
-        the ceiling — quantified rejection behavior.
-      </p>
-      <div class="snapshot">
-        <a href="https://www.tradingview.com/x/zf6C3E7w/" target="_blank">
-          <img src="https://s3.tradingview.com/snapshots/z/zf6C3E7w.png" alt="Pin Up triangle" loading="lazy">
-        </a>
-      </div>
-    </div>
-
-    <!-- Pin Down -->
-    <div class="content-block observe">
-      <h3 style="color:var(--pin-dn);">▽ Pin Down — LL → Lower Wick</h3>
-      <p>
-        Mirrors Pin Up from the floor. Captures lower wick rejection and buying absorption.
-        When the lower wick is long near the floor, the geometry shows a measurable rejection
-        from the lower zone.
-      </p>
-      <div class="snapshot">
-        <a href="https://www.tradingview.com/x/Aw2CJI4q/" target="_blank">
-          <img src="https://s3.tradingview.com/snapshots/a/Aw2CJI4q.png" alt="Pin Down triangle" loading="lazy">
-        </a>
+        <div class="readout" id="f2-readout">—</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── Four Metrics ── -->
-<section class="section" style="background:var(--bg-1);">
-  <div class="section-inner">
-    <div class="section-label observe">Four Metrics</div>
-    <h2 class="section-title observe">What Each Triangle Produces</h2>
-
-    <div class="card-grid" style="grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));">
-      <div class="card observe">
-        <h3 style="color:#e8e8f0;">θ Angle</h3>
-        <p><strong>Steepness of movement.</strong> How steeply price has moved relative to the reference, in degrees. Positive = above anchor, negative = below. Compresses naturally as time passes.</p>
-      </div>
-      <div class="card observe">
-        <h3 style="color:#e8e8f0;">dy Distance</h3>
-        <p><strong>Signed displacement.</strong> How far the target has moved from the anchor in ICS space. Divided by sigma, so the same value represents the same relative stretch regardless of symbol.</p>
-      </div>
-      <div class="card observe">
-        <h3 style="color:#e8e8f0;">A Area</h3>
-        <p><strong>Combined displacement.</strong> Product of time and price dimensions. Grows when either grows. Useful for assessing overall weight — a large area means the triangle occupies significant geometric space.</p>
-      </div>
-      <div class="card observe">
-        <h3 style="color:#e8e8f0;">C̄ Centroid</h3>
-        <p><strong>Geometric balance point.</strong> Where the triangle's internal weight is concentrated. Shifts in centroid can highlight changes in structural balance before they become visible in angle or distance.</p>
-      </div>
-    </div>
-
-    <div style="text-align:center; margin-top:48px;" class="observe">
-      <a href="lenses.html" class="btn btn-primary">Explore All 20 Lenses →</a>
+<!-- ═══ Step 3: frozen anchors ═══ -->
+<section class="sec sec-line">
+  <div class="wrap">
+    <span class="eyebrow">Layer 3 · The anchors</span>
+    <h2>Three levels, frozen in place</h2>
+    <p class="lead">A lookback window scans recent bars and freezes three reference levels. They stay fixed while price moves &mdash; giving every triangle a stable origin to measure from. When price breaks the ceiling or floor, the framework resets and re-freezes.</p>
+    <div class="grid g3" style="margin-top:2.5rem">
+      <div class="card"><div class="ico ico-red">&#x2191;</div><h3>Ceiling</h3><p>The highest high in the lookback window. The upper structural boundary.</p></div>
+      <div class="card"><div class="ico ico-cyan">&#x25C6;</div><h3>Center</h3><p>The geometric mean &mdash; <code>&radic;(HH&times;LL)</code> &mdash; of the freeze bar. The balance line.</p></div>
+      <div class="card"><div class="ico ico-green">&#x2193;</div><h3>Floor</h3><p>The lowest low in the lookback window. The lower structural boundary.</p></div>
     </div>
   </div>
 </section>
 
-<!-- ── Footer ── -->
+<!-- ═══ Step 4: FIVE TRIANGLES live ═══ -->
+<section class="sec sec-line">
+  <div class="wrap">
+    <span class="eyebrow">Layer 4 · The five triangles</span>
+    <h2>The whole engine, live</h2>
+    <p class="lead" style="margin-bottom:.5rem">This is the heart of ST-Fin. Drag the candle &mdash; move its body and wicks &mdash; and watch all five triangles redraw at once, each reporting its own angle, distance, and area in real time.</p>
+
+    <div class="demo">
+      <div class="demo-head"><span class="dot"></span><b>Five triangles · fully interactive</b></div>
+      <div class="ctrl">
+        <label>Candle position</label>
+        <input type="range" min="0" max="100" value="55" id="f4-pos">
+        <span class="v" id="f4-pos-v">—</span>
+      </div>
+      <div class="ctrl">
+        <label>Candle body size</label>
+        <input type="range" min="5" max="60" value="28" id="f4-body">
+        <span class="v" id="f4-body-v">—</span>
+      </div>
+      <div class="ctrl">
+        <label>Wick length</label>
+        <input type="range" min="0" max="40" value="16" id="f4-wick">
+        <span class="v" id="f4-wick-v">—</span>
+      </div>
+      <div class="canvas-box" style="height:400px"><canvas id="f4-canvas"></canvas></div>
+      <div class="legend">
+        <span><span class="d" style="background:var(--red)"></span> Ceiling</span>
+        <span><span class="d" style="background:var(--cyan)"></span> Center</span>
+        <span><span class="d" style="background:var(--green)"></span> Floor</span>
+        <span><span class="d" style="background:var(--amber)"></span> Pin Up</span>
+        <span><span class="d" style="background:var(--purple)"></span> Pin Down</span>
+      </div>
+    </div>
+
+    <div class="grid g5" id="f4-cards" style="margin-top:1.2rem"></div>
+  </div>
+</section>
+
+<!-- ═══ Step 5: four metrics ═══ -->
+<section class="sec sec-line">
+  <div class="wrap">
+    <span class="eyebrow">Layer 5 · Four metrics per triangle</span>
+    <h2>Twenty lenses from five shapes</h2>
+    <p class="lead">Each of the five triangles reports four independent measurements. Five times four equals twenty geometric lenses &mdash; each a continuous series you can read, smooth, and build rules on.</p>
+    <div class="grid g4" style="margin-top:2.5rem">
+      <div class="card"><div class="ico ico-cyan">&#x2220;</div><h3>Angle (&theta;)</h3><p>Steepness of the move. Signed: positive trends up, negative trends down. Steeper means stronger momentum.</p></div>
+      <div class="card"><div class="ico ico-green">&#x2195;</div><h3>Distance</h3><p>How far price has travelled from the anchor in &sigma;-units. Large means stretched, small means compressed.</p></div>
+      <div class="card"><div class="ico ico-amber">&#x25B3;</div><h3>Area</h3><p>Time and price displacement combined. Expanding means the move is gaining weight; shrinking means it is fading.</p></div>
+      <div class="card"><div class="ico ico-purple">&#x2299;</div><h3>Centroid</h3><p>The balance point of the shape. Shifts in centroid often lead visible price turns.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Normalization ═══ -->
+<section class="sec sec-line">
+  <div class="wrap">
+    <span class="eyebrow">Optional layer · Normalization <span class="tag tag-new" style="margin-left:.5rem">new</span></span>
+    <h2>Put everything on one scale</h2>
+    <div class="split">
+      <div>
+        <p class="lead" style="font-size:1.05rem">One toggle converts every series &mdash; geometric lenses, oscillators, volume, price &mdash; into a percentile rank between &minus;100 and &plus;100.</p>
+        <p class="muted" style="margin-top:1rem">Why it matters: an angle in degrees and a distance in &sigma;-units live on different scales. Normalized, they share one axis &mdash; so comparing a Ceiling angle to a Floor distance, or RSI to a centroid, finally becomes meaningful. The lookback window is shared with the triangle system.</p>
+      </div>
+      <div class="demo" style="margin:0">
+        <div class="demo-head"><span class="dot"></span><b>Raw vs normalized · interactive</b></div>
+        <div class="ctrl">
+          <label>Mode</label>
+          <input type="range" min="0" max="1" step="1" value="0" id="f5-norm">
+          <span class="v" id="f5-norm-v">Raw</span>
+        </div>
+        <div class="canvas-box" style="height:240px"><canvas id="f5-canvas"></canvas></div>
+        <div class="readout" id="f5-readout">—</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section class="sec sec-line">
+  <div class="wrap">
+    <div class="cta">
+      <h2>Now see the twenty lenses</h2>
+      <p class="muted" style="position:relative">Each of the five triangles, broken down metric by metric, on real charts.</p>
+      <div class="btn-row" style="margin-top:1.8rem">
+        <a href="lenses.html" class="btn btn-pri">Explore the lenses &rarr;</a>
+        <a href="strategy.html" class="btn btn-gh">Jump to the strategy</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <footer class="footer">
-  <div class="footer-inner">
-    <div class="footer-links">
-      <a href="index.html">Home</a>
-      <a href="framework.html">Framework</a>
-      <a href="lenses.html">20 Lenses</a>
-      <a href="strategy.html">Strategy</a>
-      <a href="ai.html">AI Integration</a>
-      <a href="pricing.html">Pricing</a>
-      <a href="https://www.tradingview.com/u/ata_sabanci/" target="_blank">TradingView</a>
-      <a href="https://x.com/sabanci_ata" target="_blank">X (Twitter)</a>
+  <div class="wrap">
+    <div class="foot-links">
+      <a href="index.html">Home</a><a href="framework.html">Framework</a><a href="lenses.html">Lenses</a><a href="strategy.html">Strategy</a><a href="ai.html">AI</a><a href="pricing.html">Pricing</a>
+      <a href="https://www.tradingview.com/script/7VaVDKeE-Smart-Trader-Final-Episode-AI-Assisting-Geometric-Strategy/">TradingView</a>
     </div>
-    <p class="footer-copy">
-      © 2026 ST-Fin by ata_sabanci. Not financial advice. You observe. You decide. You own the result.
-    </p>
+    <p>&copy; 2026 ST-Fin. For research and education. Not financial advice. You observe, you decide, you own the result.</p>
   </div>
 </footer>
 
-<script src="js/main.js"></script>
+<script>
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.12});
+document.querySelectorAll('.card,.tri,.demo').forEach(el=>{el.classList.add('reveal');io.observe(el)});
+
+function isDark(){return true}
+function setupCanvas(cv){const dpr=window.devicePixelRatio||1;const r=cv.parentElement.getBoundingClientRect();cv.width=r.width*dpr;cv.height=r.height*dpr;cv.style.width=r.width+'px';cv.style.height=r.height+'px';const c=cv.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);return{c,W:r.width,H:r.height}}
+
+/* ─── F1: scale independence ─── */
+(function(){
+  const cv=document.getElementById('f1-canvas');
+  const s=document.getElementById('f1-scale'),sv=document.getElementById('f1-scale-v'),ro=document.getElementById('f1-readout');
+  const symbols=[{n:'Penny stock',base:2.5},{n:'EUR/USD',base:1.08},{n:'Gold',base:2050},{n:'Bitcoin',base:67000}];
+  function draw(){
+    const {c,W,H}=setupCanvas(cv);c.clearRect(0,0,W,H);
+    const sym=symbols[+s.value];sv.textContent=sym.n;
+    const pad={t:30,b:30,l:20,r:20};const cW=W-pad.l-pad.r,cH=H-pad.t-pad.b;
+    // Always the same triangle SHAPE regardless of price scale
+    const xA=pad.l,xB=pad.l+cW,yA=pad.t+cH*0.25,yB=pad.t+cH*0.78;
+    c.fillStyle='rgba(0,229,255,0.07)';c.beginPath();c.moveTo(xA,yA);c.lineTo(xB,yA);c.lineTo(xB,yB);c.closePath();c.fill();
+    c.strokeStyle='rgba(0,229,255,0.3)';c.lineWidth=1;c.beginPath();c.moveTo(xB,yA);c.lineTo(xB,yB);c.stroke();
+    c.strokeStyle='#ffa726';c.lineWidth=2;c.beginPath();c.moveTo(xA,yA);c.lineTo(xB,yB);c.stroke();
+    c.fillStyle='#ef5350';c.beginPath();c.arc(xA,yA,6,0,7);c.fill();
+    c.fillStyle='#00e5ff';c.beginPath();c.arc(xB,yB,6,0,7);c.fill();
+    const ang=Math.atan2(yB-yA,xB-xA)*180/Math.PI;
+    c.fillStyle='rgba(255,255,255,0.85)';c.font='500 13px system-ui';c.textAlign='left';
+    c.fillText(sym.n+'  ·  price ≈ '+sym.base.toLocaleString(),xA+10,yA-12);
+    ro.innerHTML='Whatever the price &mdash; <b>'+sym.base.toLocaleString()+'</b> &mdash; the ICS angle stays <b>'+Math.abs(ang).toFixed(0)+'&deg;</b>. That is scale independence: the same geometry means the same thing everywhere.';
+  }
+  s.addEventListener('input',draw);window.addEventListener('resize',draw);draw();
+})();
+
+/* ─── F2: Yang-Zhang vs close-to-close ─── */
+(function(){
+  const cv=document.getElementById('f2-canvas');
+  const g=document.getElementById('f2-gap'),gv=document.getElementById('f2-gap-v'),ro=document.getElementById('f2-readout');
+  function draw(){
+    const {c,W,H}=setupCanvas(cv);c.clearRect(0,0,W,H);
+    const gap=+g.value;gv.textContent=(gap/100).toFixed(2);
+    const pad={t:24,b:30,l:30,r:20};const cW=W-pad.l-pad.r,cH=H-pad.t-pad.b;
+    // bars
+    const n=14;const bw=cW/n*0.55;
+    const yz=0.4+gap/100*0.6, cc=0.4+gap/100*0.12; // yz responds to gaps, cc barely
+    for(let i=0;i<n;i++){
+      const x=pad.l+(i+0.5)*(cW/n);
+      const gapPx=(i%2===0?gap/100:0)*cH*0.3;
+      const bodyH=cH*0.18;
+      const yb=pad.t+cH*0.5+ (i%3-1)*cH*0.08 - gapPx;
+      c.strokeStyle='rgba(255,255,255,0.5)';c.lineWidth=1;
+      c.beginPath();c.moveTo(x,yb-bodyH*0.8);c.lineTo(x,yb+bodyH*0.8);c.stroke();
+      c.fillStyle=i%2===0?'rgba(0,229,255,0.5)':'rgba(255,255,255,0.2)';
+      c.fillRect(x-bw/2,yb-bodyH/2,bw,bodyH);
+    }
+    // bars baseline labels
+    const baseY=H-pad.b+14;
+    c.fillStyle='rgba(255,255,255,0.3)';c.font='10px monospace';c.textAlign='center';
+    c.fillText('gaps every other bar',W/2,baseY);
+    // estimator readout bars (right side mini)
+    ro.innerHTML='With gap size <b>'+(gap/100).toFixed(2)+'</b>: Yang-Zhang &sigma; &asymp; <b>'+yz.toFixed(2)+'</b>, close-to-close &asymp; <b>'+cc.toFixed(2)+'</b>. '+(gap>50?'Large gaps &mdash; close-to-close badly underestimates true volatility. Yang-Zhang sees it.':'Increase the gap and watch close-to-close fall behind.');
+  }
+  g.addEventListener('input',draw);window.addEventListener('resize',draw);draw();
+})();
+
+/* ─── F4: FIVE TRIANGLES (the centerpiece) ─── */
+(function(){
+  const cv=document.getElementById('f4-canvas');
+  const pos=document.getElementById('f4-pos'),body=document.getElementById('f4-body'),wick=document.getElementById('f4-wick');
+  const posV=document.getElementById('f4-pos-v'),bodyV=document.getElementById('f4-body-v'),wickV=document.getElementById('f4-wick-v');
+  const cardsEl=document.getElementById('f4-cards');
+
+  const tris=[
+    {key:'Ceiling',col:'#ef5350'},
+    {key:'Center',col:'#00e5ff'},
+    {key:'Floor',col:'#26a69a'},
+    {key:'Pin Up',col:'#ffa726'},
+    {key:'Pin Down',col:'#ab47bc'}
+  ];
+
+  function draw(){
+    const {c,W,H}=setupCanvas(cv);c.clearRect(0,0,W,H);
+    const posVal=+pos.value, bodyVal=+body.value, wickVal=+wick.value;
+    posV.textContent=posVal.toFixed(0);bodyV.textContent=bodyVal.toFixed(0);wickV.textContent=wickVal.toFixed(0);
+
+    const pad={t:24,b:30,l:50,r:140};const cW=W-pad.l-pad.r,cH=H-pad.t-pad.b;
+    const yOf=v=>pad.t+(1-v/100)*cH;
+
+    // anchors
+    const HH=88,LL=12,MID=Math.sqrt(HH*LL); // geometric mean ≈ 32.5
+    const xA=pad.l, xB=pad.l+cW;
+
+    // candle geometry at xB
+    const center=Math.max(LL+bodyVal/2+wickVal, Math.min(HH-bodyVal/2-wickVal, posVal));
+    const bodyTop=center+bodyVal/2, bodyBot=center-bodyVal/2;
+    const high=bodyTop+wickVal, low=bodyBot-wickVal;
+    const midCandle=Math.sqrt(Math.max(high,1)*Math.max(low,1));
+
+    // grid
+    c.strokeStyle='rgba(255,255,255,0.05)';c.lineWidth=.5;c.font='11px monospace';c.fillStyle='rgba(255,255,255,0.25)';c.textAlign='right';
+    for(let v=0;v<=100;v+=25){c.beginPath();c.moveTo(pad.l,yOf(v));c.lineTo(pad.l+cW,yOf(v));c.stroke();c.fillText(v.toFixed(0),pad.l-8,yOf(v)+4)}
+
+    // anchor lines
+    const anchors=[{v:HH,col:'#ef5350',n:'Ceiling'},{v:MID,col:'#00e5ff',n:'Center'},{v:LL,col:'#26a69a',n:'Floor'}];
+    anchors.forEach(a=>{c.strokeStyle=a.col+'66';c.setLineDash([5,4]);c.lineWidth=1;c.beginPath();c.moveTo(xA,yOf(a.v));c.lineTo(xB,yOf(a.v));c.stroke();c.setLineDash([])});
+
+    // triangle helper
+    function triFill(ay,by,col){c.fillStyle=col+'14';c.beginPath();c.moveTo(xA,yOf(ay));c.lineTo(xB,yOf(ay));c.lineTo(xB,yOf(by));c.closePath();c.fill();}
+    function triHyp(ay,by,col){c.strokeStyle=col;c.lineWidth=2;c.beginPath();c.moveTo(xA,yOf(ay));c.lineTo(xB,yOf(by));c.stroke();}
+    function pinTri(ay,ey,byp,col){c.fillStyle=col+'18';c.beginPath();c.moveTo(xA,yOf(ay));c.lineTo(xB,yOf(ey));c.lineTo(xB,yOf(byp));c.closePath();c.fill();c.strokeStyle=col;c.lineWidth=2;c.beginPath();c.moveTo(xA,yOf(ay));c.lineTo(xB,yOf(ey));c.stroke();c.strokeStyle=col+'99';c.lineWidth=1;c.beginPath();c.moveTo(xA,yOf(ay));c.lineTo(xB,yOf(byp));c.stroke();}
+
+    // draw 3 main + 2 pin
+    triFill(HH,high,'#ef5350');triHyp(HH,high,'#ef5350');
+    triFill(MID,midCandle,'#00e5ff');triHyp(MID,midCandle,'#00e5ff');
+    triFill(LL,low,'#26a69a');triHyp(LL,low,'#26a69a');
+    pinTri(HH,high,bodyTop,'#ffa726');
+    pinTri(LL,low,bodyBot,'#ab47bc');
+
+    // anchor dots + labels
+    anchors.forEach(a=>{c.fillStyle=a.col;c.beginPath();c.arc(xA,yOf(a.v),5,0,7);c.fill();c.fillStyle=a.col;c.font='500 11px system-ui';c.textAlign='left';c.fillText(a.n,xA+8,yOf(a.v)-7)});
+
+    // draw the candle at xB
+    c.strokeStyle='rgba(255,255,255,0.7)';c.lineWidth=1.5;
+    c.beginPath();c.moveTo(xB,yOf(high));c.lineTo(xB,yOf(low));c.stroke();
+    const cbw=14;
+    c.fillStyle=center>=50?'#26a69a':'#ef5350';
+    c.fillRect(xB-cbw/2,yOf(bodyTop),cbw,yOf(bodyBot)-yOf(bodyTop));
+
+    // compute ICS-ish metrics for cards
+    const sig=0.5;
+    function metrics(anchorV,targetV){
+      const yA=Math.log(anchorV+10)/sig, yT=Math.log(targetV+10)/sig;
+      const dy=yT-yA, dx=1.0;
+      const theta=Math.atan(dy/dx)*180/Math.PI;
+      const area=0.5*Math.abs(dy)*Math.abs(dx);
+      return {theta,dy,area};
+    }
+    const m=[
+      metrics(HH,high),
+      metrics(MID,midCandle),
+      metrics(LL,low),
+      metrics(HH,high),
+      metrics(LL,low)
+    ];
+
+    cardsEl.innerHTML=tris.map((t,i)=>
+      '<div class="card" style="padding:1rem;border-color:'+t.col+'33">'+
+      '<div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.5rem"><span style="width:10px;height:10px;border-radius:50%;background:'+t.col+'"></span><b style="font-family:var(--f-display);font-size:13px;color:var(--tx)">'+t.key+'</b></div>'+
+      '<div style="font-family:var(--f-mono);font-size:12px;color:var(--tx-2);line-height:1.8">'+
+      '&theta; '+m[i].theta.toFixed(1)+'&deg;<br>dist '+m[i].dy.toFixed(2)+'<br>area '+m[i].area.toFixed(2)+'</div></div>'
+    ).join('');
+  }
+  [pos,body,wick].forEach(s=>s.addEventListener('input',draw));
+  window.addEventListener('resize',draw);draw();
+})();
+
+/* ─── F5: raw vs normalized ─── */
+(function(){
+  const cv=document.getElementById('f5-canvas');
+  const n=document.getElementById('f5-norm'),nv=document.getElementById('f5-norm-v'),ro=document.getElementById('f5-readout');
+  // two series with very different scales
+  const angle=[],dist=[];
+  for(let i=0;i<50;i++){angle.push(20*Math.sin(i/6)+Math.sin(i/2)*5);dist.push(2.5+1.8*Math.sin(i/6+1))}
+  function pctRank(arr,i,win){let cnt=0,tot=0;for(let j=Math.max(0,i-win);j<=i;j++){tot++;if(arr[j]<=arr[i])cnt++}return (cnt/tot)*200-100}
+  function draw(){
+    const {c,W,H}=setupCanvas(cv);c.clearRect(0,0,W,H);
+    const norm=+n.value;nv.textContent=norm?'Normalized':'Raw';
+    const pad={t:20,b:24,l:40,r:16};const cW=W-pad.l-pad.r,cH=H-pad.t-pad.b;
+    let aS,dS,lo,hi;
+    if(norm){
+      aS=angle.map((_,i)=>pctRank(angle,i,20));
+      dS=dist.map((_,i)=>pctRank(dist,i,20));
+      lo=-100;hi=100;
+    }else{
+      aS=angle;dS=dist;
+      lo=Math.min(...angle,...dist)-2;hi=Math.max(...angle,...dist)+2;
+    }
+    const yS=v=>pad.t+(1-(v-lo)/(hi-lo))*cH;
+    const xS=i=>pad.l+(i/(aS.length-1))*cW;
+    // zero line
+    c.strokeStyle='rgba(255,255,255,0.12)';c.setLineDash([4,3]);c.lineWidth=1;c.beginPath();c.moveTo(pad.l,yS(0));c.lineTo(pad.l+cW,yS(0));c.stroke();c.setLineDash([]);
+    // angle
+    c.strokeStyle='#00e5ff';c.lineWidth=2;c.beginPath();aS.forEach((v,i)=>c[i?'lineTo':'moveTo'](xS(i),yS(v)));c.stroke();
+    // dist
+    c.strokeStyle='#ffa726';c.lineWidth=2;c.beginPath();dS.forEach((v,i)=>c[i?'lineTo':'moveTo'](xS(i),yS(v)));c.stroke();
+    ro.innerHTML=norm?'<b>Normalized.</b> Both series now sit on the same &minus;100 to &plus;100 axis. The angle (cyan) and the distance (amber) are finally comparable.':'<b>Raw.</b> The angle (cyan) swings &plusmn;20&deg;, the distance (amber) barely moves near 2.5. Different scales &mdash; hard to compare. Flip the toggle.';
+  }
+  n.addEventListener('input',draw);window.addEventListener('resize',draw);draw();
+})();
+</script>
 </body>
 </html>

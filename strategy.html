@@ -1,349 +1,510 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Strategy System — ST-Fin Geometric Strategy</title>
-  <meta name="description" content="20 condition slots, quorum-based signal logic, and unified position management. Learn how to turn geometric lenses into trading rules.">
-  <link rel="stylesheet" href="css/style.css">
-  <style>
-    .slot-grid {
-      display:grid; grid-template-columns:repeat(auto-fill, minmax(54px, 1fr));
-      gap:6px; margin:16px 0 24px;
-    }
-    .slot-toggle {
-      width:100%; aspect-ratio:1; border-radius:8px; border:1px solid var(--border);
-      background:var(--bg-3); font-family:var(--font-display); font-size:12px;
-      color:var(--text-3); cursor:pointer; transition:all .2s;
-      display:flex; align-items:center; justify-content:center;
-    }
-    .slot-toggle:hover { border-color:rgba(255,255,255,0.25); }
-    .slot-toggle.on {
-      background:rgba(0,229,255,0.15); border-color:var(--center); color:var(--center);
-    }
-    .workflow-step {
-      display:flex; gap:20px; margin-bottom:32px; align-items:start;
-    }
-    .workflow-num {
-      flex-shrink:0; width:40px; height:40px; border-radius:10px;
-      background:rgba(0,229,255,0.1); border:1px solid rgba(0,229,255,0.2);
-      display:flex; align-items:center; justify-content:center;
-      font-family:var(--font-display); font-size:16px; font-weight:700; color:var(--center);
-    }
-    .workflow-text h4 {
-      font-family:var(--font-display); font-size:16px; font-weight:700; margin-bottom:6px;
-    }
-    .workflow-text p { color:var(--text-2); font-size:15px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="The ST-Fin strategy engine: 13 condition types, quorum signals, dual comparison, conflict resolution, pyramiding, dual trailing stop, observe mode, and alerts — all interactive.">
+<title>Strategy · ST-Fin</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.cond-demo{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start}
+@media(max-width:760px){.cond-demo{grid-template-columns:1fr}}
+.cond-canvas{position:relative;width:100%;height:300px;border-radius:var(--r-m);overflow:hidden;background:var(--bg);border:1px solid var(--bd)}
+.cond-info{padding:1.3rem;background:var(--bg-card);border:1px solid var(--bd);border-radius:var(--r-l)}
+.cond-info .formula{font-family:var(--f-mono);font-size:13px;color:var(--cyan);background:var(--bg);border:1px solid var(--bd);border-radius:var(--r-s);padding:.6rem .9rem;margin:.8rem 0;line-height:1.6}
+.cond-info h3{font-family:var(--f-display);margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
+.cond-info p{font-size:14px;color:var(--tx-2);line-height:1.7}
+.cond-cat{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:.2rem .6rem;border-radius:5px;background:rgba(0,229,255,.12);color:var(--cyan)}
+.fire-count{font-family:var(--f-mono);font-size:12px;color:var(--tx-2);margin-top:.8rem;padding:.5rem .8rem;background:var(--bg);border-radius:var(--r-s);border:1px solid var(--bd)}
+.fire-count b{color:var(--green)}
+.quorum-box{display:flex;flex-direction:column;gap:.6rem}
+.slot-vis{display:flex;align-items:center;gap:.8rem;padding:.7rem 1rem;background:var(--bg-card);border:1px solid var(--bd);border-radius:var(--r-m);transition:all .3s}
+.slot-vis.pass{border-color:rgba(38,166,154,.5);background:rgba(38,166,154,.06)}
+.slot-vis.fail{opacity:.5}
+.slot-vis .ind{width:10px;height:10px;border-radius:50%;flex-shrink:0;background:var(--tx-3)}
+.slot-vis.pass .ind{background:var(--green);box-shadow:0 0 8px var(--green)}
+.slot-vis .nm{font-family:var(--f-mono);font-size:13px;color:var(--tx);flex:1}
+.slot-vis .st{font-family:var(--f-mono);font-size:12px;color:var(--tx-2)}
+.quorum-result{margin-top:1rem;padding:1rem 1.2rem;border-radius:var(--r-m);font-family:var(--f-display);font-weight:600;text-align:center;font-size:1.05rem;transition:all .3s}
+.quorum-result.fire{background:rgba(38,166,154,.12);color:var(--green);border:1px solid rgba(38,166,154,.4)}
+.quorum-result.nofire{background:var(--bg-2);color:var(--tx-2);border:1px solid var(--bd)}
+</style>
 </head>
 <body>
 
-<!-- ── Nav ── -->
 <nav class="nav">
-  <div class="nav-inner">
-    <a href="index.html" class="nav-logo"><img src="logo.webp" alt="Smart Trader AI"></a>
+  <div class="nav-in">
+    <a href="index.html" class="nav-logo"><b>ST-Fin</b></a>
+    <button class="nav-tg" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">&#9776;</button>
     <div class="nav-links">
       <a href="index.html">Home</a>
       <a href="framework.html">Framework</a>
-      <a href="lenses.html">20 Lenses</a>
-      <a href="strategy.html">Strategy</a>
-      <a href="ai.html">AI Integration</a>
+      <a href="lenses.html">Lenses</a>
+      <a href="strategy.html" class="on">Strategy</a>
+      <a href="ai.html">AI</a>
       <a href="pricing.html" class="nav-cta">Get Access</a>
     </div>
-    <button class="nav-toggle" aria-label="Menu">☰</button>
   </div>
 </nav>
-<div class="nav-mobile">
-  <a href="index.html">Home</a>
-  <a href="framework.html">Framework</a>
-  <a href="lenses.html">20 Lenses</a>
-  <a href="strategy.html">Strategy</a>
-  <a href="ai.html">AI Integration</a>
-  <a href="pricing.html">Get Access</a>
-</div>
+<div class="spacer"></div>
 
-<!-- ── Header ── -->
-<header class="page-header">
-  <div class="page-header-inner">
-    <div class="section-label fade-up">From Observation to Action</div>
-    <h1 class="section-title fade-up d1" style="font-size:clamp(32px,5vw,52px);">The Strategy System</h1>
-    <p class="section-desc fade-up d2">
-      Twenty condition slots, a quorum-based signal engine, and unified position management.
-      Every parameter accessible through the settings panel — no code editing required.
-    </p>
+<section class="hero" style="padding-bottom:2.5rem">
+  <div class="wrap">
+    <span class="eyebrow">The strategy engine</span>
+    <h1 style="font-size:clamp(2rem,5vw,3.2rem)">From observation<br>to <span class="grad">executable rules</span></h1>
+    <p class="lead" style="margin:1.2rem auto 0">Twenty slots, each watching one variable through one of thirteen conditions, combined by quorum. Then full position management on top. Everything below is live &mdash; touch it.</p>
   </div>
-</header>
+</section>
 
-<div class="divider"></div>
-
-<!-- ── Condition Slots ── -->
-<section class="section">
-  <div class="section-inner">
-    <div class="content-block observe">
-      <h2>⚡ Condition Slots</h2>
-      <p>
-        The strategy provides 20 independent condition slots. Each slot monitors any one of the
-        20 geometric lenses and tests whether its current value meets a specified condition.
-        Each slot has five configurable settings:
-      </p>
-    </div>
-
-    <div class="card-grid observe" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); margin-bottom:40px;">
-      <div class="card">
-        <h3 style="color:var(--center); font-size:15px;">Variable</h3>
-        <p style="font-size:14px;">Which of the 20 lenses this slot watches. OFF = slot excluded.</p>
-      </div>
-      <div class="card">
-        <h3 style="color:var(--pin-up); font-size:15px;">Condition</h3>
-        <p style="font-size:14px;">How the value is evaluated: &gt;, &lt;, between, cross&nbsp;&gt;, cross&nbsp;&lt;</p>
-      </div>
-      <div class="card">
-        <h3 style="color:var(--floor); font-size:15px;">Threshold</h3>
-        <p style="font-size:14px;">Numeric level for the test. Continuous — any value, not a preset list.</p>
-      </div>
-      <div class="card">
-        <h3 style="color:var(--pin-dn); font-size:15px;">Apply to</h3>
-        <p style="font-size:14px;">Long entry, Short entry, Both entry, Long exit, Short exit, Both exit, or All.</p>
-      </div>
-    </div>
-
-    <div class="callout observe">
-      <p>
-        <strong>700 configurations per slot.</strong> 20 variables × 5 conditions × 7 sides = 700
-        structural configurations from a single active slot. This number is specific to this framework —
-        it comes from geometry, not a textbook formula.
-      </p>
+<!-- ═══ Slot anatomy ═══ -->
+<section class="sec sec-line">
+  <div class="wrap">
+    <span class="eyebrow">The building block</span>
+    <h2>Anatomy of a slot</h2>
+    <p class="lead">Each of the twenty slots is one independent rule. You pick what it watches, how it tests, and which side it serves. Off slots are simply ignored.</p>
+    <div class="grid g3" style="margin-top:2.5rem">
+      <div class="card"><div class="ico ico-cyan">&#x1F441;</div><h3>Variable</h3><p>Any of the ~67 series &mdash; a geometric lens, an oscillator, a volume series, or price.</p></div>
+      <div class="card"><div class="ico ico-amber">&#x2696;</div><h3>Condition + targets</h3><p>One of 13 conditions, tested against a fixed value or another series. Optionally a second target (A AND/OR B).</p></div>
+      <div class="card"><div class="ico ico-green">&#x1F3AF;</div><h3>Apply to</h3><p>Long entry, short entry, long exit, or short exit. The slot only counts toward that side.</p></div>
     </div>
   </div>
 </section>
 
-<div class="divider"></div>
+<!-- ═══ 13 CONDITIONS LIVE ═══ -->
+<section class="sec sec-line">
+  <div class="wrap">
+    <span class="eyebrow">The 13 conditions · live</span>
+    <h2>Every way a slot can fire</h2>
+    <p class="lead" style="margin-bottom:.5rem">Click any condition. The chart highlights exactly where that condition becomes true on the same sample series &mdash; so you can see what each one actually detects.</p>
 
-<!-- ── Combinatorial Counter ── -->
-<section class="section" style="background:var(--bg-1);">
-  <div class="section-inner">
-    <div class="content-block observe">
-      <h2>📈 The Combinatorial Reality</h2>
-      <p>
-        The configuration space grows fast. Each additional active slot multiplies the possibilities.
-        Try it yourself:
-      </p>
+    <div class="chips" id="cond-chips" style="margin-top:2rem"></div>
+
+    <div class="cond-demo">
+      <div class="cond-canvas"><canvas id="cond-canvas"></canvas></div>
+      <div class="cond-info">
+        <h3 id="ci-name">—</h3>
+        <span class="cond-cat" id="ci-cat">—</span>
+        <div class="formula" id="ci-formula">—</div>
+        <p id="ci-desc">—</p>
+        <div class="fire-count" id="ci-fire">—</div>
+      </div>
     </div>
+  </div>
+</section>
 
-    <div class="demo-box observe" id="combo-counter">
-      <h4>⚡ Combinatorial Counter</h4>
-
-      <div class="demo-controls">
-        <div class="demo-control">
-          <label>Active Slots <span class="val" id="val-combo-slots">2</span></label>
-          <input type="range" id="combo-slots" min="1" max="5" value="2" step="1">
+<!-- ═══ Quorum ═══ -->
+<section class="sec sec-line">
+  <div class="wrap">
+    <span class="eyebrow">Combining slots</span>
+    <h2>Quorum, not all-or-nothing</h2>
+    <div class="split">
+      <div>
+        <p class="lead" style="font-size:1.05rem">A signal does not need every slot to agree. You set a minimum &mdash; "how many must pass" &mdash; per side.</p>
+        <p class="muted" style="margin-top:1rem">Set the minimum to 1 and any single slot fires the signal (OR logic). Set it equal to the active count and all must agree (AND logic). Anything between is a true quorum &mdash; a majority vote. Each side has its own threshold: long entry, short entry, long exit, short exit.</p>
+        <div class="note"><b>Try it:</b> drag the slider to change how many of the four active slots must pass. Watch the signal flip.</div>
+      </div>
+      <div class="demo" style="margin:0">
+        <div class="demo-head"><span class="dot"></span><b>Quorum · interactive</b></div>
+        <div class="ctrl">
+          <label>Min slots required</label>
+          <input type="range" min="1" max="4" value="2" id="q-min">
+          <span class="v" id="q-min-v">2</span>
         </div>
+        <div class="quorum-box" id="q-slots"></div>
+        <div class="quorum-result nofire" id="q-result">—</div>
+        <p class="muted" style="font-size:12px;margin-top:.8rem;text-align:center">Click a slot to toggle whether it passes</p>
       </div>
+    </div>
+  </div>
+</section>
 
-      <div class="demo-output" style="grid-template-columns:1fr;">
-        <div class="demo-metric">
-          <div class="label">Structural Combinations</div>
-          <div class="value" id="combo-result" style="color:var(--center); font-size:28px;">245,350</div>
+<!-- ═══ Dual comparison ═══ -->
+<section class="sec sec-line">
+  <div class="wrap">
+    <span class="eyebrow">Inside one slot <span class="tag tag-new" style="margin-left:.5rem">new</span></span>
+    <h2>Compare against two targets at once</h2>
+    <p class="lead">Each slot can test its variable against two references &mdash; a fixed value or another live series &mdash; and combine them with AND or OR. One slot, two comparisons.</p>
+    <div class="grid g2" style="margin-top:2.5rem">
+      <div class="card"><div class="ico ico-cyan">&amp;</div><h3>A AND B</h3><p>Both comparisons must pass. Example: <code>Ceil&nbsp;angle&nbsp;&gt;&nbsp;30</code> <b>and</b> <code>RSI&nbsp;&gt;&nbsp;50</code> &mdash; geometry and momentum aligned.</p></div>
+      <div class="card"><div class="ico ico-purple">|</div><h3>A OR B</h3><p>Either passes. Example: <code>Flr&nbsp;dist&nbsp;crosses&nbsp;Floor&nbsp;MA</code> <b>or</b> <code>Vol&nbsp;buy&nbsp;&gt;&nbsp;Vol&nbsp;sell</code> &mdash; two independent triggers.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Conflict ═══ -->
+<section class="sec sec-line">
+  <div class="wrap">
+    <span class="eyebrow">When both sides fire</span>
+    <h2>Conflict resolution</h2>
+    <p class="lead">If long-entry and short-entry quorums are met on the same bar, you decide what happens.</p>
+    <div class="grid g3" style="margin-top:2.5rem">
+      <div class="card"><div class="ico ico-blue">&#x2715;</div><h3>Block both</h3><p>Neither enters. The market is indecisive, so you stand aside. The safe default.</p></div>
+      <div class="card"><div class="ico ico-green">&#x2191;</div><h3>Long wins</h3><p>Long entry takes priority; the short is suppressed.</p></div>
+      <div class="card"><div class="ico ico-red">&#x2193;</div><h3>Short wins</h3><p>Short entry takes priority; the long is suppressed.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Pyramiding ═══ -->
+<section class="sec sec-line">
+  <div class="wrap">
+    <span class="eyebrow">Scaling in</span>
+    <h2>Pyramiding</h2>
+    <div class="split">
+      <div>
+        <p class="lead" style="font-size:1.05rem">When an entry signal fires again while a position is already open in that direction, the strategy can add a layer.</p>
+        <p class="muted" style="margin-top:1rem">Each layer adds the configured equity percentage, up to a maximum you set (1 to 10 layers). The layer counter resets to zero when the position closes. With it off, only the initial entry is placed.</p>
+        <div class="note"><b>Try it:</b> set the max layers and step through entry signals to watch exposure build.</div>
+      </div>
+      <div class="demo" style="margin:0">
+        <div class="demo-head"><span class="dot"></span><b>Pyramiding · interactive</b></div>
+        <div class="ctrl">
+          <label>Max layers</label>
+          <input type="range" min="1" max="10" value="5" id="p-max">
+          <span class="v" id="p-max-v">5</span>
         </div>
-      </div>
-
-      <p style="color:var(--text-3); font-size:13px; margin-top:16px; text-align:center;">
-        Before threshold tuning — each configuration branches into a continuous range of values
-      </p>
-    </div>
-
-    <div class="card-grid observe" style="grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));">
-      <div class="card" style="text-align:center;">
-        <div style="font-family:var(--font-display); font-size:24px; font-weight:700; color:var(--center);">1 slot</div>
-        <p style="font-size:14px; margin-top:4px;">700</p>
-      </div>
-      <div class="card" style="text-align:center;">
-        <div style="font-family:var(--font-display); font-size:24px; font-weight:700; color:var(--center);">2 slots</div>
-        <p style="font-size:14px; margin-top:4px;">245,350</p>
-      </div>
-      <div class="card" style="text-align:center;">
-        <div style="font-family:var(--font-display); font-size:24px; font-weight:700; color:var(--center);">3 slots</div>
-        <p style="font-size:14px; margin-top:4px;">57,411,900</p>
-      </div>
-      <div class="card" style="text-align:center;">
-        <div style="font-family:var(--font-display); font-size:24px; font-weight:700; color:var(--center);">5 slots</div>
-        <p style="font-size:14px; margin-top:4px;">1.4 trillion</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- ── Quorum Logic ── -->
-<section class="section">
-  <div class="section-inner">
-    <div class="content-block observe">
-      <h2>⚙️ Quorum Logic</h2>
-      <p>
-        A single setting — <strong>Minimum slots required</strong> — controls how many active slots
-        must pass their condition before a signal fires. This creates a flexible spectrum:
-      </p>
-    </div>
-
-    <div class="card-grid observe" style="grid-template-columns:repeat(3, 1fr); margin-bottom:40px;">
-      <div class="card" style="text-align:center;">
-        <h3 style="color:var(--floor);">Min = 1</h3>
-        <p style="font-size:14px;">OR logic — any single slot is enough. Most permissive, most signals.</p>
-      </div>
-      <div class="card" style="text-align:center; border-color:var(--center);">
-        <h3 style="color:var(--center);">Min = 3 of 5</h3>
-        <p style="font-size:14px;">Quorum — majority must agree. Balanced filtering.</p>
-      </div>
-      <div class="card" style="text-align:center;">
-        <h3 style="color:var(--ceil);">Min = All</h3>
-        <p style="font-size:14px;">AND logic — every slot must pass. Most restrictive, fewest signals.</p>
-      </div>
-    </div>
-
-    <div class="callout observe">
-      <p>
-        <strong>Conflict guard:</strong> If both Long and Short entry quorums are met on the same bar,
-        neither trade is executed. Market indecision, not a directional signal.
-      </p>
-    </div>
-
-    <div class="content-block observe" style="margin-top:40px;">
-      <h3 style="color:var(--text-1);">Signal Modes</h3>
-      <p>
-        <strong>Close mode:</strong> Calculations use the previous bar's confirmed data. Signals appear
-        only after a bar completes — what you see is final. Recommended for backtesting.
-      </p>
-      <p>
-        <strong>Live mode:</strong> Calculations update in real time as the current bar forms. Faster,
-        but signals may shift before the bar closes.
-      </p>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- ── Position Management ── -->
-<section class="section" style="background:var(--bg-1);">
-  <div class="section-inner">
-    <div class="content-block observe">
-      <h2>🛡️ Position Management</h2>
-      <p>Three independent tools for managing open positions. Each can be enabled separately, and all three can run simultaneously.</p>
-    </div>
-
-    <div class="card-grid observe">
-      <div class="card">
-        <h3 style="color:var(--ceil);">Fixed Stop-Loss</h3>
-        <p>Percentage below entry (long) or above entry (short). Calculated from the actual average entry price, not from the signal bar's close.</p>
-      </div>
-      <div class="card">
-        <h3 style="color:var(--floor);">Fixed Take-Profit</h3>
-        <p>Percentage above entry (long) or below entry (short). Same calculation from actual fill price. Whichever level is hit first closes the position.</p>
-      </div>
-      <div class="card">
-        <h3 style="color:var(--center);">Trailing Stop</h3>
-        <p>Tracks the best price since entry. Long: follows highest high, stops at trail% below peak. Short: follows lowest low, stops at trail% above trough. Only moves in your favor.</p>
-      </div>
-    </div>
-
-    <div class="callout observe" style="margin-top:32px;">
-      <p>
-        <strong>Unified exit:</strong> When both fixed SL and trailing stop are active, the strategy
-        automatically selects the most protective level. A single exit order is maintained at all times.
-      </p>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- ── Example Configuration ── -->
-<section class="section">
-  <div class="section-inner">
-    <div class="content-block observe">
-      <h2>📋 Example: Two-Slot Configuration</h2>
-      <p>A real configuration on BTCUSD 1h, built by visual observation only — no optimization applied.</p>
-    </div>
-
-    <div class="demo-box observe">
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:24px;">
-        <div>
-          <h4 style="color:var(--pin-up); margin-bottom:12px;">Slot 1</h4>
-          <p style="font-size:14px; color:var(--text-2);">
-            Variable: PnU Angle<br>
-            Condition: cross &gt; 50<br>
-            Apply to: Short entry
-          </p>
+        <div class="canvas-box" style="height:200px"><canvas id="p-canvas"></canvas></div>
+        <div class="btn-row" style="margin-top:1rem;justify-content:flex-start">
+          <button class="btn btn-pri" id="p-add" style="padding:.5rem 1.2rem">Entry signal &rarr;</button>
+          <button class="btn btn-gh" id="p-close" style="padding:.5rem 1.2rem">Close position</button>
         </div>
-        <div>
-          <h4 style="color:var(--pin-dn); margin-bottom:12px;">Slot 2</h4>
-          <p style="font-size:14px; color:var(--text-2);">
-            Variable: PnD Angle<br>
-            Condition: cross &lt; -150<br>
-            Apply to: Short exit
-          </p>
-        </div>
+        <div class="readout" id="p-readout">Flat. Press "Entry signal" to open the first layer.</div>
       </div>
-
-      <p style="font-size:14px; color:var(--text-3);">
-        Min slots: 1 · Take-profit: 4% · No stop-loss · Signal mode: Close · Lookback: 23
-      </p>
-    </div>
-
-    <div class="card-grid observe" style="grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));">
-      <div class="card" style="text-align:center;">
-        <div style="font-family:var(--font-display); font-size:28px; font-weight:700; color:var(--floor);">107</div>
-        <p style="font-size:13px;">Trades</p>
-      </div>
-      <div class="card" style="text-align:center;">
-        <div style="font-family:var(--font-display); font-size:28px; font-weight:700; color:var(--floor);">70.09%</div>
-        <p style="font-size:13px;">Win Rate</p>
-      </div>
-      <div class="card" style="text-align:center;">
-        <div style="font-family:var(--font-display); font-size:28px; font-weight:700; color:var(--ceil);">-23.85%</div>
-        <p style="font-size:13px;">Total PnL</p>
-      </div>
-      <div class="card" style="text-align:center;">
-        <div style="font-family:var(--font-display); font-size:28px; font-weight:700; color:var(--pin-up);">0.658</div>
-        <p style="font-size:13px;">Profit Factor</p>
-      </div>
-    </div>
-
-    <div class="snapshot observe">
-      <a href="https://www.tradingview.com/x/JWUuYxeI/" target="_blank">
-        <img src="https://s3.tradingview.com/snapshots/j/JWUuYxeI.png" alt="Example configuration results" loading="lazy">
-      </a>
-      <div class="snapshot-caption">
-        The 70% win rate shows the geometric observation captured a recurring pattern.
-        The negative PnL shows that without a stop-loss, the losing trades overwhelmed the capped winners.
-        The signal found the pattern — position management needs iteration.
-      </div>
-    </div>
-
-    <div style="text-align:center; margin-top:48px;" class="observe">
-      <a href="ai.html" class="btn btn-primary">Use AI to Explore Faster →</a>
     </div>
   </div>
 </section>
 
-<!-- ── Footer ── -->
+<!-- ═══ DUAL TRAILING STOP (the requested centerpiece) ═══ -->
+<section class="sec sec-line">
+  <div class="wrap">
+    <span class="eyebrow">Capital protection</span>
+    <h2>The dual trailing stop, live</h2>
+    <p class="lead" style="margin-bottom:.5rem">Two separate trails: a tight one that locks profit, and a wider one that protects capital in drawdown. Both track the best close since entry. Drag the sliders and watch where each exit triggers.</p>
+
+    <div class="demo">
+      <div class="demo-head"><span class="dot"></span><b>Dual trail · fully interactive</b></div>
+      <div class="ctrl">
+        <label>Profit trail %</label>
+        <input type="range" min="0.5" max="6" step="0.1" value="1.5" id="t-tp">
+        <span class="v" id="t-tp-v">1.5%</span>
+      </div>
+      <div class="ctrl">
+        <label>Loss trail %</label>
+        <input type="range" min="0.5" max="8" step="0.1" value="3.0" id="t-sl">
+        <span class="v" id="t-sl-v">3.0%</span>
+      </div>
+      <div class="ctrl">
+        <label>Price scenario</label>
+        <input type="range" min="0" max="3" step="1" value="0" id="t-scn">
+        <span class="v" id="t-scn-v">—</span>
+      </div>
+      <div class="canvas-box" style="height:360px"><canvas id="t-canvas"></canvas></div>
+      <div class="legend">
+        <span><span class="d" style="background:var(--cyan)"></span> Price (close)</span>
+        <span><span class="d" style="background:var(--green)"></span> Best close</span>
+        <span><span class="l" style="background:var(--amber)"></span> Profit trail level</span>
+        <span><span class="l" style="background:var(--red)"></span> Loss trail level</span>
+        <span><span class="d" style="background:var(--purple)"></span> Exit</span>
+      </div>
+      <div class="readout" id="t-readout">—</div>
+    </div>
+
+    <div class="grid g2" style="margin-top:1.5rem">
+      <div class="card"><div class="ico ico-amber">&#x1F512;</div><h3>Profit trail (tight)</h3><p>Active while the position is in profit. Tracks the best close; if price falls this % from the peak, all layers close. Locks in gains.</p></div>
+      <div class="card"><div class="ico ico-red">&#x1F6E1;</div><h3>Loss trail (wide)</h3><p>Active while the position is in loss. A wider band gives the trade room to recover, but still caps the downside. The primary capital protector.</p></div>
+    </div>
+    <div class="note"><b>How the switch works:</b> on every confirmed bar close, the strategy checks whether the position is in profit or loss versus the average entry, then applies the matching trail percentage. Exits fire on confirmed close, never on an intrabar wick.</div>
+  </div>
+</section>
+
+<!-- ═══ Observe mode + alerts ═══ -->
+<section class="sec sec-line">
+  <div class="wrap">
+    <span class="eyebrow">Study &amp; notify</span>
+    <h2>Observe mode and alerts</h2>
+    <div class="grid g2" style="margin-top:2.5rem">
+      <div class="card"><div class="ico ico-blue">&#x1F50D;</div><h3>Observe mode</h3><p>Debug labels appear on every signal bar, but no trades execute. Hover a label to see exactly which slots fired, their values, and thresholds. Tune your configuration, then switch to Backtest to test it. Every label is colour-coded by side and carries a full breakdown.</p></div>
+      <div class="card"><div class="ico ico-amber">&#x1F514;</div><h3>Detailed alerts</h3><p>Four alert types &mdash; long entry, short entry, long exit, short exit. Each message can include every active slot with its current value and threshold, plus the trail levels. Toggle slot details and SL/TP lines independently. Pyramid layers fire their own alerts too.</p></div>
+    </div>
+    <div class="note"><b>Built-in safeguards:</b> the strategy auto-detects misconfigured slots &mdash; inverted "between" bounds, or "diverging/converging" without a comparison series &mdash; and warns you on-chart so a silent mistake never costs you a signal.</div>
+  </div>
+</section>
+
+<!-- ═══ Order of operations ═══ -->
+<section class="sec sec-line">
+  <div class="wrap">
+    <span class="eyebrow">How a bar resolves</span>
+    <h2>The execution sequence</h2>
+    <p class="lead">On each bar, the engine resolves in a fixed order so behaviour is always predictable.</p>
+    <div class="steps" style="margin-top:2.5rem;max-width:760px">
+      <div class="step"><div class="step-content"><h4>Count the quorum</h4><p>For each side, count active slots and how many pass their condition.</p></div></div>
+      <div class="step"><div class="step-content"><h4>Raise raw signals</h4><p>A side fires if passing slots meet its minimum, and the framework is active.</p></div></div>
+      <div class="step"><div class="step-content"><h4>Resolve conflict</h4><p>If both entry sides fire, apply your conflict rule (block / long wins / short wins).</p></div></div>
+      <div class="step"><div class="step-content"><h4>Exits beat pyramids</h4><p>If an exit and a same-bar pyramid both qualify, the exit wins.</p></div></div>
+      <div class="step"><div class="step-content"><h4>Enter, add, or exit</h4><p>Enter from flat, add a pyramid layer, or close &mdash; in Backtest mode only.</p></div></div>
+      <div class="step"><div class="step-content"><h4>Check the dual trail</h4><p>On confirmed close, apply the profit or loss trail and close all layers if hit.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section class="sec sec-line">
+  <div class="wrap">
+    <div class="cta">
+      <h2>Let AI help you tune it</h2>
+      <p class="muted" style="position:relative">The configuration space is vast. See how AI turns chart observation into precise slot settings.</p>
+      <div class="btn-row" style="margin-top:1.8rem">
+        <a href="ai.html" class="btn btn-pri">See the AI workflow &rarr;</a>
+        <a href="pricing.html" class="btn btn-gh">Start free trial</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <footer class="footer">
-  <div class="footer-inner">
-    <div class="footer-links">
-      <a href="index.html">Home</a>
-      <a href="framework.html">Framework</a>
-      <a href="lenses.html">20 Lenses</a>
-      <a href="strategy.html">Strategy</a>
-      <a href="ai.html">AI Integration</a>
-      <a href="pricing.html">Pricing</a>
-      <a href="https://www.tradingview.com/u/ata_sabanci/" target="_blank">TradingView</a>
-      <a href="https://x.com/sabanci_ata" target="_blank">X (Twitter)</a>
+  <div class="wrap">
+    <div class="foot-links">
+      <a href="index.html">Home</a><a href="framework.html">Framework</a><a href="lenses.html">Lenses</a><a href="strategy.html">Strategy</a><a href="ai.html">AI</a><a href="pricing.html">Pricing</a>
+      <a href="https://www.tradingview.com/script/7VaVDKeE-Smart-Trader-Final-Episode-AI-Assisting-Geometric-Strategy/">TradingView</a>
     </div>
-    <p class="footer-copy">© 2026 ST-Fin by ata_sabanci. Not financial advice. You observe. You decide. You own the result.</p>
+    <p>&copy; 2026 ST-Fin. For research and education. Not financial advice. You observe, you decide, you own the result.</p>
   </div>
 </footer>
 
-<script src="js/main.js"></script>
+<script>
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.1});
+document.querySelectorAll('.card,.demo,.step').forEach(el=>{el.classList.add('reveal');io.observe(el)});
+
+function setup(cv){const dpr=window.devicePixelRatio||1;const r=cv.parentElement.getBoundingClientRect();if(r.width===0)return null;cv.width=r.width*dpr;cv.height=r.height*dpr;cv.style.width=r.width+'px';cv.style.height=r.height+'px';const c=cv.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);return{c,W:r.width,H:r.height}}
+const RND=(s)=>{s=Math.sin(s)*43758.5;return s-Math.floor(s)};
+
+/* ═══ 13 CONDITIONS ═══ */
+(function(){
+  const N=40;
+  // sample series + a comparison series
+  const A=[],B=[];
+  for(let i=0;i<N;i++){A.push(50+22*Math.sin(i/5)+8*Math.sin(i/2.2)+(RND(i*1.7)-0.5)*6);B.push(50+14*Math.sin(i/6+1.2))}
+  const thr=58, thrLo=42, thrHi=66, nBars=3;
+
+  const conds=[
+    {k:'>',cat:'Compare',f:'value > threshold',d:'Fires whenever the variable sits above the threshold (or a comparison series).',test:i=>A[i]>thr,ref:'thr'},
+    {k:'<',cat:'Compare',f:'value < threshold',d:'Fires whenever the variable sits below the threshold.',test:i=>A[i]<thr,ref:'thr'},
+    {k:'between',cat:'Range',f:'low ≤ value ≤ high',d:'Fires when the variable is inside a band. Only works with fixed bounds.',test:i=>A[i]>=thrLo&&A[i]<=thrHi,ref:'band'},
+    {k:'cross >',cat:'Cross',f:'crossover(value, threshold)',d:'Fires on the single bar where the variable crosses up through the threshold.',test:i=>i>0&&A[i-1]<=thr&&A[i]>thr,ref:'thr'},
+    {k:'cross <',cat:'Cross',f:'crossunder(value, threshold)',d:'Fires on the single bar where the variable crosses down through the threshold.',test:i=>i>0&&A[i-1]>=thr&&A[i]<thr,ref:'thr'},
+    {k:'rising',cat:'Slope',f:'rising(value, N)',d:'Fires when the variable has risen for N consecutive bars. Threshold sets N.',test:i=>{if(i<nBars)return false;for(let j=0;j<nBars;j++)if(A[i-j]<=A[i-j-1])return false;return true},ref:'none'},
+    {k:'falling',cat:'Slope',f:'falling(value, N)',d:'Fires when the variable has fallen for N consecutive bars.',test:i=>{if(i<nBars)return false;for(let j=0;j<nBars;j++)if(A[i-j]>=A[i-j-1])return false;return true},ref:'none'},
+    {k:'diverging',cat:'Spread',f:'rising( |A − B|, N )',d:'Fires when the gap between the variable and a comparison series is widening. Needs a series.',test:i=>{if(i<nBars)return false;const g=k=>Math.abs(A[k]-B[k]);for(let j=0;j<nBars;j++)if(g(i-j)<=g(i-j-1))return false;return true},ref:'B'},
+    {k:'converging',cat:'Spread',f:'falling( |A − B|, N )',d:'Fires when the gap between the variable and a comparison series is narrowing.',test:i=>{if(i<nBars)return false;const g=k=>Math.abs(A[k]-B[k]);for(let j=0;j<nBars;j++)if(g(i-j)>=g(i-j-1))return false;return true},ref:'B'},
+    {k:'flip up',cat:'Reversal',f:'Δ now > 0 ∧ Δ prev ≤ 0',d:'Fires the moment the variable turns from falling (or flat) to rising. A local bottom.',test:i=>i>1&&A[i]>A[i-1]&&A[i-1]<=A[i-2],ref:'none'},
+    {k:'flip down',cat:'Reversal',f:'Δ now < 0 ∧ Δ prev ≥ 0',d:'Fires the moment the variable turns from rising to falling. A local top.',test:i=>i>1&&A[i]<A[i-1]&&A[i-1]>=A[i-2],ref:'none'},
+    {k:'new high',cat:'Extreme',f:'value = max over N bars',d:'Fires when the variable prints its highest value in the last N bars.',test:i=>{if(i<nBars)return false;let m=-1e9;for(let j=1;j<=nBars;j++)m=Math.max(m,A[i-j]);return A[i]>m},ref:'none'},
+    {k:'new low',cat:'Extreme',f:'value = min over N bars',d:'Fires when the variable prints its lowest value in the last N bars.',test:i=>{if(i<nBars)return false;let m=1e9;for(let j=1;j<=nBars;j++)m=Math.min(m,A[i-j]);return A[i]<m},ref:'none'}
+  ];
+
+  const chipsEl=document.getElementById('cond-chips');
+  chipsEl.innerHTML=conds.map((c,i)=>'<button class="chip'+(i===0?' on':'')+'" data-i="'+i+'">'+c.k+'</button>').join('');
+  const cv=document.getElementById('cond-canvas');
+  const nameEl=document.getElementById('ci-name'),catEl=document.getElementById('ci-cat'),fEl=document.getElementById('ci-formula'),dEl=document.getElementById('ci-desc'),fireEl=document.getElementById('ci-fire');
+  let cur=0;
+
+  function draw(){
+    const o=setup(cv);if(!o)return;const{c,W,H}=o;c.clearRect(0,0,W,H);
+    const cond=conds[cur];
+    const pad={t:24,b:28,l:40,r:16};const cW=W-pad.l-pad.r,cH=H-pad.t-pad.b;
+    const lo=20,hi=80;
+    const xS=i=>pad.l+(i/(N-1))*cW;const yS=v=>pad.t+(1-(v-lo)/(hi-lo))*cH;
+
+    // grid
+    c.strokeStyle='rgba(255,255,255,0.05)';c.lineWidth=.5;c.font='11px monospace';c.fillStyle='rgba(255,255,255,0.25)';c.textAlign='right';
+    for(let v=20;v<=80;v+=20){c.beginPath();c.moveTo(pad.l,yS(v));c.lineTo(pad.l+cW,yS(v));c.stroke();c.fillText(v,pad.l-6,yS(v)+4)}
+
+    // reference visuals
+    if(cond.ref==='thr'){
+      c.strokeStyle='rgba(255,167,38,0.6)';c.setLineDash([5,4]);c.lineWidth=1.2;c.beginPath();c.moveTo(pad.l,yS(thr));c.lineTo(pad.l+cW,yS(thr));c.stroke();c.setLineDash([]);
+      c.fillStyle='#ffa726';c.textAlign='left';c.fillText('threshold '+thr,pad.l+4,yS(thr)-6);
+    }else if(cond.ref==='band'){
+      c.fillStyle='rgba(255,167,38,0.08)';c.fillRect(pad.l,yS(thrHi),cW,yS(thrLo)-yS(thrHi));
+      c.strokeStyle='rgba(255,167,38,0.4)';c.setLineDash([5,4]);c.lineWidth=1;
+      c.beginPath();c.moveTo(pad.l,yS(thrHi));c.lineTo(pad.l+cW,yS(thrHi));c.stroke();
+      c.beginPath();c.moveTo(pad.l,yS(thrLo));c.lineTo(pad.l+cW,yS(thrLo));c.stroke();c.setLineDash([]);
+    }else if(cond.ref==='B'){
+      c.strokeStyle='rgba(171,71,188,0.7)';c.lineWidth=1.5;c.beginPath();B.forEach((v,i)=>c[i?'lineTo':'moveTo'](xS(i),yS(v)));c.stroke();
+      c.fillStyle='#ab47bc';c.textAlign='left';c.fillText('comparison series',pad.l+4,yS(B[2])-6);
+    }
+
+    // main series
+    c.strokeStyle='#00e5ff';c.lineWidth=2;c.beginPath();A.forEach((v,i)=>c[i?'lineTo':'moveTo'](xS(i),yS(v)));c.stroke();
+
+    // fire markers
+    let fires=0;
+    for(let i=0;i<N;i++){
+      if(cond.test(i)){
+        fires++;
+        c.fillStyle='rgba(38,166,154,0.18)';c.fillRect(xS(i)-3,pad.t,6,cH);
+        c.fillStyle='#26a69a';c.beginPath();c.arc(xS(i),yS(A[i]),4.5,0,7);c.fill();
+        c.strokeStyle='rgba(38,166,154,0.4)';c.lineWidth=2;c.beginPath();c.arc(xS(i),yS(A[i]),8,0,7);c.stroke();
+      }
+    }
+
+    nameEl.innerHTML='<span style="font-family:var(--f-mono);color:var(--cyan)">'+cond.k+'</span>';
+    catEl.textContent=cond.cat;
+    fEl.textContent=cond.f;
+    dEl.textContent=cond.d;
+    fireEl.innerHTML='Fires on <b>'+fires+'</b> bar'+(fires===1?'':'s')+' in this sample. Green markers show exactly where.';
+  }
+
+  chipsEl.addEventListener('click',e=>{
+    const b=e.target.closest('.chip');if(!b)return;
+    cur=+b.dataset.i;
+    document.querySelectorAll('#cond-chips .chip').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');draw();
+  });
+  window.addEventListener('resize',()=>{clearTimeout(window._cz);window._cz=setTimeout(draw,150)});
+  draw();
+})();
+
+/* ═══ QUORUM ═══ */
+(function(){
+  const slots=[
+    {n:'Ceil angle > 30',pass:true},
+    {n:'RSI > 50',pass:true},
+    {n:'Vol buy > Vol sell',pass:false},
+    {n:'Flr dist rising 3',pass:true}
+  ];
+  const minS=document.getElementById('q-min'),minV=document.getElementById('q-min-v');
+  const slotsEl=document.getElementById('q-slots'),resEl=document.getElementById('q-result');
+  function render(){
+    const min=+minS.value;minV.textContent=min;
+    slotsEl.innerHTML=slots.map((s,i)=>
+      '<div class="slot-vis '+(s.pass?'pass':'fail')+'" data-i="'+i+'"><span class="ind"></span><span class="nm">'+s.n+'</span><span class="st">'+(s.pass?'✓ pass':'✗ fail')+'</span></div>'
+    ).join('');
+    const passed=slots.filter(s=>s.pass).length;
+    const active=slots.length;
+    const fire=passed>=Math.min(min,active);
+    resEl.className='quorum-result '+(fire?'fire':'nofire');
+    resEl.textContent=passed+' / '+active+' passed · min '+Math.min(min,active)+'  →  '+(fire?'SIGNAL FIRES':'no signal');
+  }
+  slotsEl.addEventListener('click',e=>{const r=e.target.closest('.slot-vis');if(!r)return;slots[+r.dataset.i].pass=!slots[+r.dataset.i].pass;render()});
+  minS.addEventListener('input',render);
+  render();
+})();
+
+/* ═══ PYRAMIDING ═══ */
+(function(){
+  const maxS=document.getElementById('p-max'),maxV=document.getElementById('p-max-v');
+  const addB=document.getElementById('p-add'),closeB=document.getElementById('p-close');
+  const ro=document.getElementById('p-readout');const cv=document.getElementById('p-canvas');
+  let layers=0;
+  function draw(){
+    const o=setup(cv);if(!o)return;const{c,W,H}=o;c.clearRect(0,0,W,H);
+    const max=+maxS.value;maxV.textContent=max;
+    const pad={t:20,b:24,l:16,r:16};const cW=W-pad.l-pad.r,cH=H-pad.t-pad.b;
+    const slotW=cW/max;
+    for(let i=0;i<max;i++){
+      const x=pad.l+i*slotW;
+      const filled=i<layers;
+      c.fillStyle=filled?'rgba(0,229,255,0.18)':'rgba(255,255,255,0.03)';
+      c.strokeStyle=filled?'rgba(0,229,255,0.5)':'rgba(255,255,255,0.1)';
+      c.lineWidth=1;
+      const bx=x+slotW*0.12,bw=slotW*0.76,bh=cH*0.6,by=pad.t+cH-bh;
+      c.fillRect(bx,by,bw,bh);c.strokeRect(bx,by,bw,bh);
+      if(filled){c.fillStyle='#00e5ff';c.font='600 12px monospace';c.textAlign='center';c.fillText('L'+(i+1),bx+bw/2,by+bh/2+4)}
+    }
+    const exposure=(layers*5);
+    ro.innerHTML=layers===0?'Flat. Press "Entry signal" to open the first layer.':'<b>'+layers+'</b> layer'+(layers===1?'':'s')+' open · ~<b>'+exposure+'%</b> equity exposure'+(layers>=max?' · max reached':'');
+  }
+  addB.addEventListener('click',()=>{const max=+maxS.value;if(layers<max)layers++;draw()});
+  closeB.addEventListener('click',()=>{layers=0;draw()});
+  maxS.addEventListener('input',()=>{if(layers>+maxS.value)layers=+maxS.value;draw()});
+  window.addEventListener('resize',()=>{clearTimeout(window._pz);window._pz=setTimeout(draw,150)});
+  draw();
+})();
+
+/* ═══ DUAL TRAILING STOP ═══ */
+(function(){
+  const tpS=document.getElementById('t-tp'),slS=document.getElementById('t-sl'),scnS=document.getElementById('t-scn');
+  const tpV=document.getElementById('t-tp-v'),slV=document.getElementById('t-sl-v'),scnV=document.getElementById('t-scn-v');
+  const ro=document.getElementById('t-readout');const cv=document.getElementById('t-canvas');
+
+  const scenarios=[
+    {name:'Run-up then fade',gen:()=>{const a=[];let p=100;const d=[0.4,0.6,1.0,0.8,1.2,1.5,1.1,1.8,2.0,1.4,2.2,1.6,2.5,1.9,2.8,2.2,1.5,1.0,0.3,-0.5,-1.0,-0.6,-1.4,-0.8,-1.8,-1.2,-2.0,-1.5,-0.9,-1.6,-2.2,-1.4,-0.8,-1.9,-2.4,-1.6,-1.0,-2.0,-2.6,-1.8];for(let i=0;i<40;i++){p+=d[i]*0.7;a.push(p)}return a}},
+    {name:'Steady climb',gen:()=>{const a=[];let p=100;for(let i=0;i<40;i++){p+=(0.8+Math.sin(i/4)*0.6+(RND(i)-0.45)*0.8);a.push(p)}return a}},
+    {name:'Choppy / sideways',gen:()=>{const a=[];let p=100;for(let i=0;i<40;i++){p+=Math.sin(i/2.5)*1.4+(RND(i*2)-0.5)*1.6;a.push(p)}return a}},
+    {name:'Sharp drop',gen:()=>{const a=[];let p=100;const d=[0.5,0.8,0.6,1.0,0.4,-0.5,-1.5,-2.5,-2.0,-3.0,-2.2,-1.8,-2.6,-1.4,-2.0,-1.0,-1.6,-0.8,-1.2,-0.6,-1.0,-0.4,-0.8,0.2,-0.6,0.4,-0.4,0.6,0.2,0.5,0.3,0.6,0.4,0.7,0.5,0.8,0.6,0.9,0.7,1.0];for(let i=0;i<40;i++){p+=d[i]*0.9;a.push(p)}return a}}
+  ];
+  const entryBar=4;
+
+  function draw(){
+    const o=setup(cv);if(!o)return;const{c,W,H}=o;c.clearRect(0,0,W,H);
+    const tp=+tpS.value,sl=+slS.value,scn=+scnS.value;
+    tpV.textContent=tp.toFixed(1)+'%';slV.textContent=sl.toFixed(1)+'%';scnV.textContent=scenarios[scn].name;
+    const prices=scenarios[scn].gen();const entry=prices[entryBar];
+    const pad={t:24,b:30,l:48,r:16};const cW=W-pad.l-pad.r,cH=H-pad.t-pad.b;
+    const lo=Math.min(...prices)-3,hi=Math.max(...prices)+3;
+    const xS=i=>pad.l+(i/(prices.length-1))*cW;const yS=v=>pad.t+(1-(v-lo)/(hi-lo))*cH;
+
+    // grid
+    c.strokeStyle='rgba(255,255,255,0.05)';c.lineWidth=.5;c.font='11px monospace';c.fillStyle='rgba(255,255,255,0.25)';c.textAlign='right';
+    for(let v=Math.ceil(lo/5)*5;v<=hi;v+=5){c.beginPath();c.moveTo(pad.l,yS(v));c.lineTo(pad.l+cW,yS(v));c.stroke();c.fillText(v.toFixed(0),pad.l-6,yS(v)+4)}
+
+    // simulate
+    let best=entry,exitBar=-1,exitWhy='';
+    const bestA=[],tpA=[],slA=[];
+    for(let i=entryBar;i<prices.length;i++){
+      const cl=prices[i];
+      if(exitBar<0){
+        best=Math.max(best,cl);
+        const tpL=best*(1-tp/100),slL=best*(1-sl/100);
+        bestA.push({x:i,y:best});tpA.push({x:i,y:tpL});slA.push({x:i,y:slL});
+        const inProfit=(cl-entry)>=0;
+        const active=inProfit?tpL:slL;
+        if(cl<active){exitBar=i;exitWhy=inProfit?'profit trail':'loss trail'}
+      }
+    }
+
+    // position zone
+    if(exitBar>0){c.fillStyle='rgba(0,229,255,0.03)';c.fillRect(xS(entryBar),pad.t,xS(exitBar)-xS(entryBar),cH)}
+
+    // band fill between trails
+    if(tpA.length>1){
+      c.fillStyle='rgba(255,167,38,0.04)';c.beginPath();
+      tpA.forEach((p,j)=>c[j?'lineTo':'moveTo'](xS(p.x),yS(p.y)));
+      for(let j=slA.length-1;j>=0;j--)c.lineTo(xS(slA[j].x),yS(slA[j].y));
+      c.closePath();c.fill();
+    }
+    // best close
+    c.strokeStyle='#26a69a';c.lineWidth=1;c.setLineDash([]);c.beginPath();bestA.forEach((p,j)=>c[j?'lineTo':'moveTo'](xS(p.x),yS(p.y)));c.stroke();
+    // profit trail
+    c.strokeStyle='#ffa726';c.lineWidth=1.2;c.setLineDash([6,3]);c.beginPath();tpA.forEach((p,j)=>c[j?'lineTo':'moveTo'](xS(p.x),yS(p.y)));c.stroke();
+    // loss trail
+    c.strokeStyle='#ef5350';c.lineWidth=1.2;c.beginPath();slA.forEach((p,j)=>c[j?'lineTo':'moveTo'](xS(p.x),yS(p.y)));c.stroke();c.setLineDash([]);
+    // price
+    c.strokeStyle='#00e5ff';c.lineWidth=2;c.beginPath();prices.forEach((p,i)=>c[i?'lineTo':'moveTo'](xS(i),yS(p)));c.stroke();
+
+    // entry
+    c.fillStyle='#ffa726';c.beginPath();c.arc(xS(entryBar),yS(entry),5,0,7);c.fill();
+    c.fillStyle='#ffa726';c.font='500 11px system-ui';c.textAlign='left';c.fillText('Entry '+entry.toFixed(1),xS(entryBar)+10,yS(entry)+4);
+
+    // exit
+    if(exitBar>0){
+      c.fillStyle='#ab47bc';c.beginPath();c.arc(xS(exitBar),yS(prices[exitBar]),6,0,7);c.fill();
+      c.strokeStyle='rgba(171,71,188,0.3)';c.lineWidth=2;c.beginPath();c.arc(xS(exitBar),yS(prices[exitBar]),11,0,7);c.stroke();
+      c.fillStyle='#fff';c.textAlign='right';c.font='500 11px system-ui';
+      c.fillText('Exit · '+exitWhy,xS(exitBar)-12,yS(prices[exitBar])-8);
+      const pnl=(prices[exitBar]-entry)/entry*100;
+      c.fillStyle=pnl>=0?'#26a69a':'#ef5350';c.font='600 12px system-ui';
+      c.fillText((pnl>=0?'+':'')+pnl.toFixed(2)+'%',xS(exitBar)-12,yS(prices[exitBar])+8);
+      const bars=exitBar-entryBar;
+      ro.innerHTML='Held <b>'+bars+'</b> bars · closed by <b>'+exitWhy+'</b> ('+(exitWhy==='profit trail'?tp.toFixed(1):sl.toFixed(1))+'%) · PnL <b>'+(pnl>=0?'+':'')+pnl.toFixed(2)+'%</b>. The profit trail rides tight under each new best close; the loss trail stays wider for room.';
+    }else{
+      ro.innerHTML='No exit in this window. Try a tighter profit trail or a different scenario.';
+    }
+  }
+  [tpS,slS,scnS].forEach(s=>s.addEventListener('input',draw));
+  window.addEventListener('resize',()=>{clearTimeout(window._tz);window._tz=setTimeout(draw,150)});
+  draw();
+})();
+</script>
 </body>
 </html>

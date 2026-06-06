@@ -1,322 +1,350 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>20 Geometric Lenses — ST-Fin Strategy</title>
-  <meta name="description" content="Explore all 20 geometric lenses: angle, distance, area, and centroid for each of the five ICS triangles.">
-  <link rel="stylesheet" href="css/style.css">
-  <style>
-    .lens-detail { margin-bottom:64px; scroll-margin-top:80px; }
-    .lens-detail h3 { display:flex; align-items:center; gap:12px; }
-    .lens-detail .num {
-      font-family:var(--font-display); font-size:12px; font-weight:700;
-      background:rgba(255,255,255,0.06); border:1px solid var(--border);
-      border-radius:6px; padding:2px 10px; color:var(--text-3);
-    }
-    .lens-filter { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:40px; }
-    .filter-btn {
-      font-family:var(--font-display); font-size:13px; font-weight:600;
-      padding:8px 18px; border-radius:8px; border:1px solid var(--border);
-      background:transparent; color:var(--text-3); cursor:pointer; transition:all .2s;
-    }
-    .filter-btn:hover { color:var(--text-1); border-color:rgba(255,255,255,0.2); }
-    .filter-btn.active { border-color:var(--center); color:var(--center); background:rgba(0,229,255,0.06); }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Every variable in ST-Fin: 20 geometric lenses, 14 classic oscillators, 6 intrabar volume series, and 7 price series. All live, all in one slot system.">
+<title>Lenses · ST-Fin</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin:2rem 0 0}
+.tab{font-family:var(--f-body);font-size:14px;font-weight:600;padding:.7rem 1.3rem;border-radius:var(--r-s);border:1px solid var(--bd-2);background:var(--bg-2);color:var(--tx-2);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.5rem}
+.tab:hover{border-color:var(--bd-cyan);color:var(--tx)}
+.tab.on{background:var(--bg-3);color:var(--tx);border-color:var(--bd-cyan)}
+.tab .cnt{font-family:var(--f-mono);font-size:11px;color:var(--tx-3)}
+.tab.on .cnt{color:var(--cyan)}
+.panel{display:none}
+.panel.on{display:block}
+.lens-row{display:grid;grid-template-columns:280px 1fr;gap:1.5rem;align-items:center;padding:1.5rem;background:var(--bg-card);border:1px solid var(--bd);border-radius:var(--r-l);margin-bottom:1rem;transition:border-color .3s}
+.lens-row:hover{border-color:var(--bd-cyan)}
+.lens-meta .ln-tag{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--f-mono);font-size:11px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;padding:.2rem .6rem;border-radius:5px;margin-bottom:.6rem}
+.lens-meta h3{font-size:1.15rem;margin-bottom:.4rem}
+.lens-meta p{font-size:13.5px;color:var(--tx-2);line-height:1.6}
+.mini{position:relative;width:100%;height:130px;border-radius:var(--r-m);overflow:hidden;background:var(--bg);border:1px solid var(--bd)}
+@media(max-width:680px){.lens-row{grid-template-columns:1fr;gap:1rem}}
+</style>
 </head>
 <body>
 
-<!-- ── Nav ── -->
 <nav class="nav">
-  <div class="nav-inner">
-    <a href="index.html" class="nav-logo"><img src="logo.webp" alt="Smart Trader AI"></a>
+  <div class="nav-in">
+    <a href="index.html" class="nav-logo"><b>ST-Fin</b></a>
+    <button class="nav-tg" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">&#9776;</button>
     <div class="nav-links">
       <a href="index.html">Home</a>
       <a href="framework.html">Framework</a>
-      <a href="lenses.html">20 Lenses</a>
+      <a href="lenses.html" class="on">Lenses</a>
       <a href="strategy.html">Strategy</a>
-      <a href="ai.html">AI Integration</a>
+      <a href="ai.html">AI</a>
       <a href="pricing.html" class="nav-cta">Get Access</a>
     </div>
-    <button class="nav-toggle" aria-label="Menu">☰</button>
   </div>
 </nav>
-<div class="nav-mobile">
-  <a href="index.html">Home</a>
-  <a href="framework.html">Framework</a>
-  <a href="lenses.html">20 Lenses</a>
-  <a href="strategy.html">Strategy</a>
-  <a href="ai.html">AI Integration</a>
-  <a href="pricing.html">Get Access</a>
-</div>
+<div class="spacer"></div>
 
-<!-- ── Header ── -->
-<header class="page-header">
-  <div class="page-header-inner">
-    <div class="section-label fade-up">Observation</div>
-    <h1 class="section-title fade-up d1" style="font-size:clamp(32px,5vw,52px);">The 20 Geometric Lenses</h1>
-    <p class="section-desc fade-up d2">
-      Four metrics applied to five triangles. Each lens is a raw, unfiltered measurement
-      plotted directly — no smoothing, no reshaping. What you see is what the triangle produced.
-    </p>
-  </div>
-</header>
-
-<div class="divider"></div>
-
-<section class="section">
-  <div class="section-inner">
-
-    <!-- ── Quick Nav ── -->
-    <div class="lens-filter observe">
-      <a href="#ceiling-lenses" class="filter-btn" style="border-color:rgba(239,83,80,0.4); color:var(--ceil);">▲ Ceiling</a>
-      <a href="#center-lenses" class="filter-btn" style="border-color:rgba(0,229,255,0.4); color:var(--center);">◆ Center</a>
-      <a href="#floor-lenses" class="filter-btn" style="border-color:rgba(38,166,154,0.4); color:var(--floor);">▼ Floor</a>
-      <a href="#pnu-lenses" class="filter-btn" style="border-color:rgba(255,152,0,0.4); color:var(--pin-up);">△ Pin Up</a>
-      <a href="#pnd-lenses" class="filter-btn" style="border-color:rgba(171,71,188,0.4); color:var(--pin-dn);">▽ Pin Down</a>
+<section class="hero" style="padding-bottom:2rem">
+  <div class="wrap">
+    <span class="eyebrow">The variables</span>
+    <h1 style="font-size:clamp(2rem,5vw,3.2rem)">Every lens you<br><span class="grad">can read</span></h1>
+    <p class="lead" style="margin:1.2rem auto 0">Twenty geometric lenses, fourteen classic oscillators, six volume series, and seven price series &mdash; roughly sixty-seven variables, all feeding one slot system. Each is shown live below.</p>
+    <div class="stats" style="max-width:680px;margin:2.5rem auto 0">
+      <div class="stat"><div class="stat-n">20</div><div class="stat-l">Geometric</div></div>
+      <div class="stat"><div class="stat-n">14</div><div class="stat-l">Oscillators</div></div>
+      <div class="stat"><div class="stat-n">6</div><div class="stat-l">Volume</div></div>
+      <div class="stat"><div class="stat-n">7</div><div class="stat-l">Price</div></div>
     </div>
-
-    <!-- ═══ CEILING LENSES ═══ -->
-    <div id="ceiling-lenses" style="scroll-margin-top:80px;">
-      <h2 class="observe" style="color:var(--ceil); font-family:var(--font-display); font-size:24px; margin-bottom:32px;">▲ Ceiling Lenses</h2>
-
-      <div class="lens-detail observe" id="lens-1">
-        <h3><span class="num">01</span> <span style="color:var(--ceil);">Ceiling Angle</span></h3>
-        <p>Tracks the ICS angle between the frozen ceiling and the current bar's high. Negative when the high sits below the ceiling. When the reading reaches the boundary of its range, notable changes in price behavior tend to follow.</p>
-        <div class="snapshot">
-          <a href="https://www.tradingview.com/x/oPMjW3id/" target="_blank"><img src="https://s3.tradingview.com/snapshots/o/oPMjW3id.png" alt="Ceiling Angle" loading="lazy"></a>
-          <div class="snapshot-caption">Ceiling Angle on SOLUSD daily. The angle moves in a negative range. When it reaches the boundary, price behavior shifts at the marked points.</div>
-        </div>
-      </div>
-
-      <div class="lens-detail observe" id="lens-2">
-        <h3><span class="num">02</span> <span style="color:var(--ceil);">Ceiling Distance</span></h3>
-        <p>Signed displacement between the frozen ceiling and the current high in ICS space. Negative when the high is below the ceiling, approaching zero as the high nears the ceiling level.</p>
-        <div class="snapshot">
-          <a href="https://www.tradingview.com/x/4Exb3d4E/" target="_blank"><img src="https://s3.tradingview.com/snapshots/4/4Exb3d4E.png" alt="Ceiling Distance" loading="lazy"></a>
-          <div class="snapshot-caption">Ceiling Distance on AAPL daily. Boundary extremes align with visible shifts in price behavior.</div>
-        </div>
-      </div>
-
-      <div class="lens-detail observe" id="lens-3">
-        <h3><span class="num">03</span> <span style="color:var(--ceil);">Ceiling Area</span></h3>
-        <p>Combines time and price displacement into a single non-negative reading. Expands as the triangle grows, contracts when vertical displacement narrows faster than horizontal extends.</p>
-        <div class="snapshot">
-          <a href="https://www.tradingview.com/x/MRgXSjcF/" target="_blank"><img src="https://s3.tradingview.com/snapshots/m/MRgXSjcF.png" alt="Ceiling Area" loading="lazy"></a>
-          <div class="snapshot-caption">Ceiling Area on daily chart. Area builds gradually and contracts when the vertical displacement narrows.</div>
-        </div>
-      </div>
-
-      <div class="lens-detail observe" id="lens-4">
-        <h3><span class="num">04</span> <span style="color:var(--ceil);">Ceiling Centroid</span></h3>
-        <p>The geometric balance point of the Ceiling triangle. Shifts in centroid often lead visible price turns. The same numeric level can produce different outcomes — demonstrating that context matters.</p>
-        <div class="snapshot">
-          <a href="https://www.tradingview.com/x/zYMmvcdi/" target="_blank"><img src="https://s3.tradingview.com/snapshots/z/zYMmvcdi.png" alt="Ceiling Centroid" loading="lazy"></a>
-          <div class="snapshot-caption">Ceiling Centroid reaching zero at two separate points — different outcomes from the same level.</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="divider" style="margin:48px 0;"></div>
-
-    <!-- ═══ CENTER LENSES ═══ -->
-    <div id="center-lenses" style="scroll-margin-top:80px;">
-      <h2 class="observe" style="color:var(--center); font-family:var(--font-display); font-size:24px; margin-bottom:32px;">◆ Center Lenses</h2>
-
-      <div class="lens-detail observe" id="lens-5">
-        <h3><span class="num">05</span> <span style="color:var(--center);">Center Angle</span></h3>
-        <p>Measures the angle between the frozen center and the current bar's midpoint. Crosses zero as the midpoint moves above or below the structural center. When it reaches the boundary of its range, notable price shifts tend to follow.</p>
-        <div class="snapshot">
-          <a href="https://www.tradingview.com/x/K5k0Zdnt/" target="_blank"><img src="https://s3.tradingview.com/snapshots/k/K5k0Zdnt.png" alt="Center Angle" loading="lazy"></a>
-          <div class="snapshot-caption">Center Angle crossing zero and reaching the upper boundary of its range.</div>
-        </div>
-      </div>
-
-      <div class="lens-detail observe" id="lens-6">
-        <h3><span class="num">06</span> <span style="color:var(--center);">Center Distance</span></h3>
-        <p>Signed displacement from the frozen center to the current midpoint. Shows how far the midpoint has stretched from the center.</p>
-        <div class="snapshot">
-          <a href="https://www.tradingview.com/x/q8KIAynL/" target="_blank"><img src="https://s3.tradingview.com/snapshots/q/q8KIAynL.png" alt="Center Distance" loading="lazy"></a>
-          <div class="snapshot-caption">Center Distance (cyan) and Ceiling Distance (red) read together — displacement from both anchors simultaneously.</div>
-        </div>
-      </div>
-
-      <div class="lens-detail observe" id="lens-7">
-        <h3><span class="num">07</span> <span style="color:var(--center);">Center Area</span></h3>
-        <p>Geometric footprint of the Center triangle. Expands as the move develops, peaks, then contracts — tracking the weight and maturity of the current structure.</p>
-        <div class="snapshot">
-          <a href="https://www.tradingview.com/x/lt97G4bM/" target="_blank"><img src="https://s3.tradingview.com/snapshots/l/lt97G4bM.png" alt="Center Area" loading="lazy"></a>
-          <div class="snapshot-caption">Center Area reaching peak before contracting. Direction changes align with price shifts.</div>
-        </div>
-      </div>
-
-      <div class="lens-detail observe" id="lens-8">
-        <h3><span class="num">08</span> <span style="color:var(--center);">Center Centroid</span></h3>
-        <p>Tracks where the Center triangle's balance is concentrated. Remains stable within cycles, drops sharply at anchor resets — raw centroid changes, not smoothed signals.</p>
-        <div class="snapshot">
-          <a href="https://www.tradingview.com/x/TUQY7sDr/" target="_blank"><img src="https://s3.tradingview.com/snapshots/t/TUQY7sDr.png" alt="Center Centroid" loading="lazy"></a>
-          <div class="snapshot-caption">Center Centroid — stable within cycles, sharp drops at anchor resets.</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="divider" style="margin:48px 0;"></div>
-
-    <!-- ═══ FLOOR LENSES ═══ -->
-    <div id="floor-lenses" style="scroll-margin-top:80px;">
-      <h2 class="observe" style="color:var(--floor); font-family:var(--font-display); font-size:24px; margin-bottom:32px;">▼ Floor Lenses</h2>
-
-      <div class="lens-detail observe" id="lens-9">
-        <h3><span class="num">09</span> <span style="color:var(--floor);">Floor Angle</span></h3>
-        <p>Slope between the frozen floor and the current bar's low. Stays positive while price holds above the floor. Sharp drops mark anchor resets, not ordinary bearish signals.</p>
-        <div class="snapshot">
-          <a href="https://www.tradingview.com/x/1jLD3qbg/" target="_blank"><img src="https://s3.tradingview.com/snapshots/1/1jLD3qbg.png" alt="Floor Angle" loading="lazy"></a>
-        </div>
-      </div>
-
-      <div class="lens-detail observe" id="lens-10">
-        <h3><span class="num">10</span> <span style="color:var(--floor);">Floor Distance</span></h3>
-        <p>Pure vertical separation from the frozen floor, removing the time-slope component. More directly tied to the lower-side price relationship.</p>
-        <div class="snapshot">
-          <a href="https://www.tradingview.com/x/L1ea8ywt/" target="_blank"><img src="https://s3.tradingview.com/snapshots/l/L1ea8ywt.png" alt="Floor Distance" loading="lazy"></a>
-        </div>
-      </div>
-
-      <div class="lens-detail observe" id="lens-11">
-        <h3><span class="num">11</span> <span style="color:var(--floor);">Floor Area</span></h3>
-        <p>Geometric footprint from the floor side. Read alongside Ceiling Area to see whether geometric weight builds on one side or both simultaneously.</p>
-        <div class="snapshot">
-          <a href="https://www.tradingview.com/x/r0DoJBkC/" target="_blank"><img src="https://s3.tradingview.com/snapshots/r/r0DoJBkC.png" alt="Floor Area" loading="lazy"></a>
-          <div class="snapshot-caption">Floor Area (cyan) and Ceiling Area (red) expanding in parallel — geometric weight on both sides.</div>
-        </div>
-      </div>
-
-      <div class="lens-detail observe" id="lens-12">
-        <h3><span class="num">12</span> <span style="color:var(--floor);">Floor Centroid</span></h3>
-        <p>Balance point of the Floor triangle. Read together with Center and Ceiling centroids to see how balance is distributed across the whole structure.</p>
-        <div class="snapshot">
-          <a href="https://www.tradingview.com/x/JJ7jPVvd/" target="_blank"><img src="https://s3.tradingview.com/snapshots/j/JJ7jPVvd.png" alt="Floor Centroid" loading="lazy"></a>
-          <div class="snapshot-caption">Three centroids — Floor, Center, Ceiling — tightly clustered and broadly parallel. Drops mark anchor resets.</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="divider" style="margin:48px 0;"></div>
-
-    <!-- ═══ PIN UP LENSES ═══ -->
-    <div id="pnu-lenses" style="scroll-margin-top:80px;">
-      <h2 class="observe" style="color:var(--pin-up); font-family:var(--font-display); font-size:24px; margin-bottom:32px;">△ Pin Up Lenses</h2>
-
-      <div class="lens-detail observe" id="lens-13">
-        <h3><span class="num">13</span> <span style="color:var(--pin-up);">Pin Up Angle</span></h3>
-        <p>Pulse-like behavior — flat near zero most of the time, spiking sharply on bars with geometrically significant upper wicks. Unlike main lenses, this one is event-driven.</p>
-        <div class="snapshot">
-          <a href="https://www.tradingview.com/x/4HQUXKin/" target="_blank"><img src="https://s3.tradingview.com/snapshots/4/4HQUXKin.png" alt="Pin Up Angle" loading="lazy"></a>
-        </div>
-      </div>
-
-      <div class="lens-detail observe" id="lens-14">
-        <h3><span class="num">14</span> <span style="color:var(--pin-up);">Pin Up Distance</span></h3>
-        <p>ICS-normalized length of the upper wick itself. Spends most time in a low range near zero. Rare excursions into the upper zone mark candles with notably long upper shadows.</p>
-        <div class="snapshot">
-          <a href="https://www.tradingview.com/x/ivFJC2Om/" target="_blank"><img src="https://s3.tradingview.com/snapshots/i/ivFJC2Om.png" alt="Pin Up Distance" loading="lazy"></a>
-        </div>
-      </div>
-
-      <div class="lens-detail observe" id="lens-15">
-        <h3><span class="num">15</span> <span style="color:var(--pin-up);">Pin Up Area</span></h3>
-        <p>When this reading stays flat near zero for an extended stretch, bar after bar produces no meaningful upper shadow. That sustained silence — the absence of upper-wick rejection — often coincides with a clean directional move.</p>
-        <div class="snapshot">
-          <a href="https://www.tradingview.com/x/FuW3nW6V/" target="_blank"><img src="https://s3.tradingview.com/snapshots/f/FuW3nW6V.png" alt="Pin Up Area" loading="lazy"></a>
-        </div>
-      </div>
-
-      <div class="lens-detail observe" id="lens-16">
-        <h3><span class="num">16</span> <span style="color:var(--pin-up);">Pin Up Centroid</span></h3>
-        <p>Runs flat during sustained moves, with brief pulses marking bars where the wick geometry changed — potential points of interest along a trend.</p>
-        <div class="snapshot">
-          <a href="https://www.tradingview.com/x/jlOga5nf/" target="_blank"><img src="https://s3.tradingview.com/snapshots/j/jlOga5nf.png" alt="Pin Up Centroid" loading="lazy"></a>
-        </div>
-      </div>
-    </div>
-
-    <div class="divider" style="margin:48px 0;"></div>
-
-    <!-- ═══ PIN DOWN LENSES ═══ -->
-    <div id="pnd-lenses" style="scroll-margin-top:80px;">
-      <h2 class="observe" style="color:var(--pin-dn); font-family:var(--font-display); font-size:24px; margin-bottom:32px;">▽ Pin Down Lenses</h2>
-
-      <div class="lens-detail observe" id="lens-17">
-        <h3><span class="num">17</span> <span style="color:var(--pin-dn);">Pin Down Angle</span></h3>
-        <p>Rare deep negative spikes — reaching -80 to -90 degrees — marking geometrically rare lower-wick events. Over eighteen months, only a few such spikes appear.</p>
-        <div class="snapshot">
-          <a href="https://www.tradingview.com/x/QflCQJNz/" target="_blank"><img src="https://s3.tradingview.com/snapshots/q/QflCQJNz.png" alt="Pin Down Angle" loading="lazy"></a>
-        </div>
-      </div>
-
-      <div class="lens-detail observe" id="lens-18">
-        <h3><span class="num">18</span> <span style="color:var(--pin-dn);">Pin Down Distance</span></h3>
-        <p>Continuously oscillating — the normal rhythm of lower-wick lengths bar after bar. The outlier drops that break below the usual boundary mark abnormally long lower shadows.</p>
-        <div class="snapshot">
-          <a href="https://www.tradingview.com/x/cFonGGk7/" target="_blank"><img src="https://s3.tradingview.com/snapshots/c/cFonGGk7.png" alt="Pin Down Distance" loading="lazy"></a>
-        </div>
-      </div>
-
-      <div class="lens-detail observe" id="lens-19">
-        <h3><span class="num">19</span> <span style="color:var(--pin-dn);">Pin Down Area</span></h3>
-        <p>Gains meaning primarily through combination. When Floor Area converges toward Pin Down Area, the structure is squeezed near the floor — a convergence that often aligns with visible shifts.</p>
-        <div class="snapshot">
-          <a href="https://www.tradingview.com/x/IIYXkkcl/" target="_blank"><img src="https://s3.tradingview.com/snapshots/i/IIYXkkcl.png" alt="Pin Down Area" loading="lazy"></a>
-        </div>
-      </div>
-
-      <div class="lens-detail observe" id="lens-20">
-        <h3><span class="num">20</span> <span style="color:var(--pin-dn);">Pin Down Centroid</span></h3>
-        <p>Each sharp pulse aligns with a discrete jump on the price chart. The sequence of pulses traces the step-by-step rhythm of the market's advance — a geometric mirror of the market's own cadence.</p>
-        <div class="snapshot">
-          <a href="https://www.tradingview.com/x/bwzjFSBT/" target="_blank"><img src="https://s3.tradingview.com/snapshots/b/bwzjFSBT.png" alt="Pin Down Centroid" loading="lazy"></a>
-        </div>
-      </div>
-    </div>
-
-    <div class="callout observe" style="margin-top:48px;">
-      <p>
-        <strong>Reading lenses together</strong> adds a second layer of observation.
-        A single lens describes one geometric relationship. When two or more lenses are placed
-        on the same pane, their interaction — convergence, divergence, crossing — reveals patterns
-        that no single lens shows on its own. The same raw data, observed as a set of relationships.
-      </p>
-    </div>
-
-    <div class="snapshot observe">
-      <a href="https://www.tradingview.com/x/QbJnTpzl/" target="_blank"><img src="https://s3.tradingview.com/snapshots/q/QbJnTpzl.png" alt="Combined lenses" loading="lazy"></a>
-      <div class="snapshot-caption">Ceiling Angle (red) and Center Angle (cyan) read together — convergence points align with price shifts.</div>
-    </div>
-
-    <div style="text-align:center; margin-top:48px;" class="observe">
-      <a href="strategy.html" class="btn btn-primary">Turn Lenses into Rules →</a>
-    </div>
-
   </div>
 </section>
 
-<!-- ── Footer ── -->
-<footer class="footer">
-  <div class="footer-inner">
-    <div class="footer-links">
-      <a href="index.html">Home</a>
-      <a href="framework.html">Framework</a>
-      <a href="lenses.html">20 Lenses</a>
-      <a href="strategy.html">Strategy</a>
-      <a href="ai.html">AI Integration</a>
-      <a href="pricing.html">Pricing</a>
-      <a href="https://www.tradingview.com/u/ata_sabanci/" target="_blank">TradingView</a>
-      <a href="https://x.com/sabanci_ata" target="_blank">X (Twitter)</a>
+<section class="sec sec-line">
+  <div class="wrap">
+    <div class="tabs">
+      <button class="tab on" data-p="geo">&#x1F4D0; Geometric <span class="cnt">20</span></button>
+      <button class="tab" data-p="osc">&#x1F4C8; Oscillators <span class="cnt">14</span></button>
+      <button class="tab" data-p="vol">&#x1F50A; Volume <span class="cnt">6</span></button>
+      <button class="tab" data-p="prc">&#x1F4B0; Price <span class="cnt">7</span></button>
     </div>
-    <p class="footer-copy">© 2026 ST-Fin by ata_sabanci. Not financial advice. You observe. You decide. You own the result.</p>
+
+    <!-- GEOMETRIC -->
+    <div class="panel on" id="p-geo" style="margin-top:2rem">
+      <p class="muted" style="margin-bottom:1.5rem">Five triangles &mdash; Ceiling, Center, Floor, Pin Up, Pin Down &mdash; each measured four ways. Every series also has a smoothed MA variant (SMA, EMA, or Median).</p>
+      <div id="geo-list"></div>
+    </div>
+
+    <!-- OSCILLATORS -->
+    <div class="panel" id="p-osc" style="margin-top:2rem">
+      <p class="muted" style="margin-bottom:1.5rem">Familiar oscillators, computed on the same engine and available in every slot. Use them alone, or fuse them with geometry through dual comparison.</p>
+      <div id="osc-list"></div>
+    </div>
+
+    <!-- VOLUME -->
+    <div class="panel" id="p-vol" style="margin-top:2rem">
+      <p class="muted" style="margin-bottom:1.5rem">Intrabar buy and sell volume, pulled from a lower timeframe &mdash; real order-flow context inside each bar. Default 1-minute works on every plan.</p>
+      <div id="vol-list"></div>
+    </div>
+
+    <!-- PRICE -->
+    <div class="panel" id="p-prc" style="margin-top:2rem">
+      <p class="muted" style="margin-bottom:1.5rem">The raw price series, available both as a slot variable and as a comparison reference for any other lens.</p>
+      <div id="prc-list"></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-line">
+  <div class="wrap">
+    <div class="cta">
+      <h2>Now combine them</h2>
+      <p class="muted" style="position:relative">Sixty-seven variables, thirteen conditions, twenty slots, quorum logic. See the strategy engine.</p>
+      <div class="btn-row" style="margin-top:1.8rem">
+        <a href="strategy.html" class="btn btn-pri">Explore the strategy &rarr;</a>
+        <a href="ai.html" class="btn btn-gh">See the AI workflow</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="foot-links">
+      <a href="index.html">Home</a><a href="framework.html">Framework</a><a href="lenses.html">Lenses</a><a href="strategy.html">Strategy</a><a href="ai.html">AI</a><a href="pricing.html">Pricing</a>
+      <a href="https://www.tradingview.com/script/7VaVDKeE-Smart-Trader-Final-Episode-AI-Assisting-Geometric-Strategy/">TradingView</a>
+    </div>
+    <p>&copy; 2026 ST-Fin. For research and education. Not financial advice. You observe, you decide, you own the result.</p>
   </div>
 </footer>
 
-<script src="js/main.js"></script>
+<script>
+// Tabs
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('on'));
+  t.classList.add('on');
+  document.getElementById('p-'+t.dataset.p).classList.add('on');
+  setTimeout(drawAll,50);
+}));
+
+// ─── Shared mini-chart helpers ───
+function mc(canvas){
+  const dpr=window.devicePixelRatio||1;
+  const r=canvas.parentElement.getBoundingClientRect();
+  if(r.width===0)return null;
+  canvas.width=r.width*dpr;canvas.height=r.height*dpr;
+  canvas.style.width=r.width+'px';canvas.style.height=r.height+'px';
+  const c=canvas.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);
+  return{c,W:r.width,H:r.height};
+}
+function plotLine(c,W,H,data,color,opts){
+  opts=opts||{};
+  const pad=opts.pad||{t:14,b:14,l:8,r:8};
+  const cW=W-pad.l-pad.r,cH=H-pad.t-pad.b;
+  let lo=opts.lo!==undefined?opts.lo:Math.min(...data);
+  let hi=opts.hi!==undefined?opts.hi:Math.max(...data);
+  if(lo===hi){lo-=1;hi+=1}
+  const xS=i=>pad.l+(i/(data.length-1))*cW;
+  const yS=v=>pad.t+(1-(v-lo)/(hi-lo))*cH;
+  if(opts.zero!==false&&lo<0&&hi>0){
+    c.strokeStyle='rgba(255,255,255,0.1)';c.setLineDash([3,3]);c.lineWidth=1;
+    c.beginPath();c.moveTo(pad.l,yS(0));c.lineTo(pad.l+cW,yS(0));c.stroke();c.setLineDash([]);
+  }
+  if(opts.fill){
+    const grad=c.createLinearGradient(0,pad.t,0,pad.t+cH);
+    grad.addColorStop(0,color+'33');grad.addColorStop(1,color+'00');
+    c.fillStyle=grad;c.beginPath();c.moveTo(xS(0),yS(data[0]));
+    data.forEach((v,i)=>c.lineTo(xS(i),yS(v)));
+    c.lineTo(xS(data.length-1),pad.t+cH);c.lineTo(xS(0),pad.t+cH);c.closePath();c.fill();
+  }
+  c.strokeStyle=color;c.lineWidth=opts.lw||1.8;c.beginPath();
+  data.forEach((v,i)=>c[i?'lineTo':'moveTo'](xS(i),yS(v)));c.stroke();
+  // last dot
+  c.fillStyle=color;c.beginPath();c.arc(xS(data.length-1),yS(data[data.length-1]),3,0,7);c.fill();
+}
+function plotHist(c,W,H,data,posC,negC){
+  const pad={t:14,b:14,l:8,r:8};
+  const cW=W-pad.l-pad.r,cH=H-pad.t-pad.b;
+  const hi=Math.max(...data.map(Math.abs));
+  const xS=i=>pad.l+(i/(data.length-1))*cW;
+  const yS=v=>pad.t+(1-(v+hi)/(2*hi))*cH;
+  const bw=cW/data.length*0.6;
+  data.forEach((v,i)=>{
+    c.fillStyle=v>=0?posC:negC;
+    const y0=yS(0),y1=yS(v);
+    c.fillRect(xS(i)-bw/2,Math.min(y0,y1),bw,Math.abs(y1-y0));
+  });
+}
+
+// ─── Data generators ───
+const RND=(s)=>{s=Math.sin(s)*43758.5;return s-Math.floor(s)};
+function wave(n,amp,freq,phase,noise){const a=[];for(let i=0;i<n;i++)a.push(amp*Math.sin(i/freq+phase)+(noise?(RND(i*1.7+phase)-0.5)*amp*noise:0));return a}
+const N=44;
+
+// Geometric: 5 families x 4 metrics
+const GEO=[
+  {fam:'Ceiling',col:'#ef5350',tag:'HH → High'},
+  {fam:'Center',col:'#00e5ff',tag:'Mid → Mid'},
+  {fam:'Floor',col:'#26a69a',tag:'LL → Low'},
+  {fam:'Pin Up',col:'#ffa726',tag:'HH → Wick'},
+  {fam:'Pin Down',col:'#ab47bc',tag:'LL → Wick'}
+];
+const METRICS=[
+  {m:'Angle',desc:'Steepness of the move. Signed: positive trends up, negative down. Steeper means stronger momentum.',gen:(p)=>wave(N,28,7,p,.3)},
+  {m:'Distance',desc:'How far price has travelled from the anchor in σ-units. Large means stretched, small means compressed.',gen:(p)=>wave(N,2.2,9,p+1,.25).map(v=>v+2.5)},
+  {m:'Area',desc:'Time and price displacement combined. Expanding means gaining weight; shrinking means fading.',gen:(p)=>wave(N,1.4,11,p+2,.2).map(v=>Math.abs(v)+0.4)},
+  {m:'Centroid',desc:'Balance point of the shape. Shifts often lead visible price turns.',gen:(p)=>wave(N,1.8,8,p+3,.3).map(v=>v+1.5)}
+];
+
+function buildGeo(){
+  const host=document.getElementById('geo-list');
+  let html='';let idx=0;
+  GEO.forEach((g,gi)=>{
+    METRICS.forEach((mt,mi)=>{
+      const cid='geo-'+gi+'-'+mi;
+      html+='<div class="lens-row">'+
+        '<div class="lens-meta">'+
+          '<span class="ln-tag" style="background:'+g.col+'1f;color:'+g.col+'">'+g.fam+' · '+g.tag+'</span>'+
+          '<h3>'+g.fam+' '+mt.m+'</h3>'+
+          '<p>'+mt.desc+'</p>'+
+        '</div>'+
+        '<div class="mini"><canvas id="'+cid+'" data-fam="'+gi+'" data-met="'+mi+'"></canvas></div>'+
+      '</div>';
+      idx++;
+    });
+  });
+  host.innerHTML=html;
+}
+
+// Oscillators
+const OSC=[
+  {n:'RSI',col:'#42a5f5',desc:'Relative Strength Index, 0–100. Momentum oscillator.',type:'bounded',gen:(p)=>wave(N,30,8,p,.4).map(v=>50+v)},
+  {n:'RSI MA',col:'#90caf9',desc:'Smoothed RSI — slower, cleaner momentum read.',type:'bounded',gen:(p)=>wave(N,22,10,p,.15).map(v=>50+v)},
+  {n:'Stoch %K',col:'#cddc39',desc:'Stochastic %K — position within recent range.',type:'bounded',gen:(p)=>wave(N,38,6,p,.5).map(v=>50+v)},
+  {n:'Stoch %K MA',col:'#e6ee9c',desc:'Smoothed %K.',type:'bounded',gen:(p)=>wave(N,28,8,p,.2).map(v=>50+v)},
+  {n:'Stoch %D',col:'#dce775',desc:'%D — signal line of the stochastic.',type:'bounded',gen:(p)=>wave(N,30,9,p+1,.2).map(v=>50+v)},
+  {n:'Stoch %D MA',col:'#f0f4c3',desc:'Smoothed %D.',type:'bounded',gen:(p)=>wave(N,24,11,p+1,.1).map(v=>50+v)},
+  {n:'CCI',col:'#ff5722',desc:'Commodity Channel Index — deviation from mean.',type:'signed',gen:(p)=>wave(N,120,7,p,.4)},
+  {n:'CCI MA',col:'#ff8a65',desc:'Smoothed CCI.',type:'signed',gen:(p)=>wave(N,90,10,p,.15)},
+  {n:'MACD',col:'#7e57c2',desc:'MACD line — fast minus slow EMA.',type:'signed',gen:(p)=>wave(N,1.5,9,p,.3)},
+  {n:'MACD MA',col:'#b39ddb',desc:'Smoothed MACD line.',type:'signed',gen:(p)=>wave(N,1.1,12,p,.1)},
+  {n:'MACD signal',col:'#9575cd',desc:'Signal line — EMA of the MACD line.',type:'signed',gen:(p)=>wave(N,1.3,10,p+1,.15)},
+  {n:'MACD signal MA',col:'#d1c4e9',desc:'Smoothed signal line.',type:'signed',gen:(p)=>wave(N,1.0,13,p+1,.1)},
+  {n:'MACD hist',col:'#ec407a',desc:'Histogram — MACD minus signal. Momentum of momentum.',type:'hist',gen:(p)=>wave(N,1.0,7,p,.4)},
+  {n:'MACD hist MA',col:'#f48fb1',desc:'Smoothed histogram.',type:'hist',gen:(p)=>wave(N,0.7,10,p,.15)}
+];
+function buildOsc(){
+  const host=document.getElementById('osc-list');let html='';
+  OSC.forEach((o,i)=>{
+    html+='<div class="lens-row">'+
+      '<div class="lens-meta">'+
+        '<span class="ln-tag" style="background:'+o.col+'1f;color:'+o.col+'">Oscillator</span>'+
+        '<h3>'+o.n+'</h3><p>'+o.desc+'</p>'+
+      '</div>'+
+      '<div class="mini"><canvas id="osc-'+i+'" data-i="'+i+'"></canvas></div>'+
+    '</div>';
+  });
+  host.innerHTML=html;
+}
+
+// Volume
+const VOL=[
+  {n:'Vol buy',col:'#26a69a',desc:'Intrabar buying volume — aggressive bids from the lower timeframe.'},
+  {n:'Vol buy MA',col:'#80cbc4',desc:'Smoothed buy volume.'},
+  {n:'Vol sell',col:'#ef5350',desc:'Intrabar selling volume — aggressive offers.'},
+  {n:'Vol sell MA',col:'#ef9a9a',desc:'Smoothed sell volume.'},
+  {n:'Vol total',col:'#78909c',desc:'Total intrabar volume — buy plus sell.'},
+  {n:'Vol total MA',col:'#b0bec5',desc:'Smoothed total volume.'}
+];
+function buildVol(){
+  const host=document.getElementById('vol-list');let html='';
+  VOL.forEach((v,i)=>{
+    html+='<div class="lens-row">'+
+      '<div class="lens-meta">'+
+        '<span class="ln-tag" style="background:'+v.col+'1f;color:'+v.col+'">Volume</span>'+
+        '<h3>'+v.n+'</h3><p>'+v.desc+'</p>'+
+      '</div>'+
+      '<div class="mini"><canvas id="vol-'+i+'" data-i="'+i+'"></canvas></div>'+
+    '</div>';
+  });
+  host.innerHTML=html;
+}
+
+// Price
+const PRC=[
+  {n:'Open',col:'#42a5f5',desc:'Opening price of each bar.'},
+  {n:'High',col:'#26a69a',desc:'Highest price of each bar.'},
+  {n:'Low',col:'#ef5350',desc:'Lowest price of each bar.'},
+  {n:'Close',col:'#00e5ff',desc:'Closing price — the most common reference.'},
+  {n:'HL2',col:'#ffa726',desc:'(High + Low) / 2 — the bar midpoint.'},
+  {n:'HLC3',col:'#ab47bc',desc:'(High + Low + Close) / 3 — typical price.'},
+  {n:'OHLC4',col:'#cddc39',desc:'(Open + High + Low + Close) / 4 — average price.'}
+];
+function buildPrc(){
+  const host=document.getElementById('prc-list');let html='';
+  PRC.forEach((p,i)=>{
+    html+='<div class="lens-row">'+
+      '<div class="lens-meta">'+
+        '<span class="ln-tag" style="background:'+p.col+'1f;color:'+p.col+'">Price</span>'+
+        '<h3>'+p.n+'</h3><p>'+p.desc+'</p>'+
+      '</div>'+
+      '<div class="mini"><canvas id="prc-'+i+'" data-i="'+i+'"></canvas></div>'+
+    '</div>';
+  });
+  host.innerHTML=html;
+}
+
+// price path shared for price tab
+const PRICEPATH=(function(){let p=100;const a=[];for(let i=0;i<N;i++){p+=(RND(i*2.3)-0.45)*3;a.push(p)}return a})();
+
+// ─── Draw all visible ───
+function drawAll(){
+  // geometric
+  document.querySelectorAll('#geo-list canvas').forEach(cv=>{
+    const o=mc(cv);if(!o)return;
+    const gi=+cv.dataset.fam,mi=+cv.dataset.met;
+    const g=GEO[gi],mt=METRICS[mi];
+    const data=mt.gen(gi*1.3+mi*0.7);
+    o.c.clearRect(0,0,o.W,o.H);
+    plotLine(o.c,o.W,o.H,data,g.col,{fill:true});
+  });
+  // oscillators
+  document.querySelectorAll('#osc-list canvas').forEach(cv=>{
+    const o=mc(cv);if(!o)return;
+    const i=+cv.dataset.i,os=OSC[i];const data=os.gen(i*0.9);
+    o.c.clearRect(0,0,o.W,o.H);
+    if(os.type==='hist'){plotHist(o.c,o.W,o.H,data,'#ec407a','#7e57c2');}
+    else if(os.type==='bounded'){plotLine(o.c,o.W,o.H,data,os.col,{lo:0,hi:100,fill:true});}
+    else{plotLine(o.c,o.W,o.H,data,os.col,{fill:true});}
+  });
+  // volume
+  document.querySelectorAll('#vol-list canvas').forEach(cv=>{
+    const o=mc(cv);if(!o)return;
+    const i=+cv.dataset.i;const v=VOL[i];
+    const data=wave(N,1,5,i*0.8,.6).map(x=>Math.abs(x)+0.3);
+    o.c.clearRect(0,0,o.W,o.H);
+    if(v.n.includes('MA')){plotLine(o.c,o.W,o.H,data,v.col,{lo:0,fill:true});}
+    else{
+      const pad={t:14,b:14,l:8,r:8};const cW=o.W-pad.l-pad.r,cH=o.H-pad.t-pad.b;
+      const hi=Math.max(...data);const xS=k=>pad.l+(k/(data.length-1))*cW;const bw=cW/data.length*0.6;
+      data.forEach((d,k)=>{o.c.fillStyle=v.col+'cc';const h=(d/hi)*cH;o.c.fillRect(xS(k)-bw/2,pad.t+cH-h,bw,h)});
+    }
+  });
+  // price
+  document.querySelectorAll('#prc-list canvas').forEach(cv=>{
+    const o=mc(cv);if(!o)return;
+    const i=+cv.dataset.i;const p=PRC[i];
+    let data=PRICEPATH.map((v,k)=>{
+      switch(p.n){case'High':return v+1.5;case'Low':return v-1.5;case'Open':return v-0.5+RND(k)*1;case'HL2':return v+0.2;case'HLC3':return v+0.1;case'OHLC4':return v;default:return v}
+    });
+    o.c.clearRect(0,0,o.W,o.H);
+    plotLine(o.c,o.W,o.H,data,p.col,{fill:true,zero:false});
+  });
+}
+
+buildGeo();buildOsc();buildVol();buildPrc();
+drawAll();
+window.addEventListener('resize',()=>{clearTimeout(window._rz);window._rz=setTimeout(drawAll,150)});
+
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.1});
+document.querySelectorAll('.card,.demo').forEach(el=>{el.classList.add('reveal');io.observe(el)});
+</script>
 </body>
 </html>
