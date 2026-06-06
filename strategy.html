@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="The ST-Fin strategy engine: 13 condition types, quorum signals, dual comparison, conflict resolution, pyramiding, dual trailing stop, observe mode, and alerts — all interactive.">
+<meta name="description" content="The ST-Fin strategy engine: 10 slots, 13 condition types, block/veto slots, quorum signals, dual comparison, conflict resolution, pyramiding, dual trailing stop, observe mode, and alerts — all interactive.">
 <title>Strategy · ST-Fin</title>
 <link rel="stylesheet" href="style.css">
 <style>
@@ -52,7 +52,7 @@
   <div class="wrap">
     <span class="eyebrow">The strategy engine</span>
     <h1 style="font-size:clamp(2rem,5vw,3.2rem)">From observation<br>to <span class="grad">executable rules</span></h1>
-    <p class="lead" style="margin:1.2rem auto 0">Twenty slots, each watching one variable through one of thirteen conditions, combined by quorum. Then full position management on top. Everything below is live &mdash; touch it.</p>
+    <p class="lead" style="margin:1.2rem auto 0">Ten slots, each watching one variable through one of thirteen conditions, combined by quorum. Then full position management on top. Everything below is live &mdash; touch it.</p>
   </div>
 </section>
 
@@ -61,11 +61,11 @@
   <div class="wrap">
     <span class="eyebrow">The building block</span>
     <h2>Anatomy of a slot</h2>
-    <p class="lead">Each of the twenty slots is one independent rule. You pick what it watches, how it tests, and which side it serves. Off slots are simply ignored.</p>
+    <p class="lead">Each of the ten slots is one independent rule. You pick what it watches, how it tests, and which side it serves. Off slots are simply ignored.</p>
     <div class="grid g3" style="margin-top:2.5rem">
       <div class="card"><div class="ico ico-cyan">&#x1F441;</div><h3>Variable</h3><p>Any of the ~67 series &mdash; a geometric lens, an oscillator, a volume series, or price.</p></div>
       <div class="card"><div class="ico ico-amber">&#x2696;</div><h3>Condition + targets</h3><p>One of 13 conditions, tested against a fixed value or another series. Optionally a second target (A AND/OR B).</p></div>
-      <div class="card"><div class="ico ico-green">&#x1F3AF;</div><h3>Apply to</h3><p>Long entry, short entry, long exit, or short exit. The slot only counts toward that side.</p></div>
+      <div class="card"><div class="ico ico-green">&#x1F3AF;</div><h3>Apply to</h3><p>Long entry, short entry, long exit, short exit &mdash; or block any of these four sides as a veto.</p></div>
     </div>
   </div>
 </section>
@@ -128,6 +128,20 @@
       <div class="card"><div class="ico ico-cyan">&amp;</div><h3>A AND B</h3><p>Both comparisons must pass. Example: <code>Ceil&nbsp;angle&nbsp;&gt;&nbsp;30</code> <b>and</b> <code>RSI&nbsp;&gt;&nbsp;50</code> &mdash; geometry and momentum aligned.</p></div>
       <div class="card"><div class="ico ico-purple">|</div><h3>A OR B</h3><p>Either passes. Example: <code>Flr&nbsp;dist&nbsp;crosses&nbsp;Floor&nbsp;MA</code> <b>or</b> <code>Vol&nbsp;buy&nbsp;&gt;&nbsp;Vol&nbsp;sell</code> &mdash; two independent triggers.</p></div>
     </div>
+  </div>
+</section>
+
+<!-- ═══ Block slots ═══ -->
+<section class="sec sec-line">
+  <div class="wrap">
+    <span class="eyebrow">Signal veto <span class="tag tag-new" style="margin-left:.5rem">new</span></span>
+    <h2>Block slots</h2>
+    <p class="lead">Any slot can be set to block instead of support. A single passing block slot kills the signal for that side &mdash; a hard veto, regardless of how many other slots agree.</p>
+    <div class="grid g2" style="margin-top:2.5rem">
+      <div class="card"><div class="ico ico-red">&#x1F6AB;</div><h3>Block entry</h3><p>Set a slot to Block long entry or Block short entry. When its condition passes, the entry signal is suppressed even if the quorum is met.</p></div>
+      <div class="card"><div class="ico ico-amber">&#x1F6AB;</div><h3>Block exit</h3><p>Set a slot to Block long exit or Block short exit. Prevents the exit signal from firing when a specific condition is true.</p></div>
+    </div>
+    <div class="note"><b>Use case:</b> you want to enter long when Ceil angle crosses above 30, but not when RSI is already overbought. Set one slot for the entry, another to block long entry when RSI &gt; 80.</div>
   </div>
 </section>
 
@@ -223,7 +237,7 @@
     <span class="eyebrow">Study &amp; notify</span>
     <h2>Observe mode and alerts</h2>
     <div class="grid g2" style="margin-top:2.5rem">
-      <div class="card"><div class="ico ico-blue">&#x1F50D;</div><h3>Observe mode</h3><p>Debug labels appear on every signal bar, but no trades execute. Hover a label to see exactly which slots fired, their values, and thresholds. Tune your configuration, then switch to Backtest to test it. Every label is colour-coded by side and carries a full breakdown.</p></div>
+      <div class="card"><div class="ico ico-blue">&#x1F50D;</div><h3>Observe mode</h3><p>No trades execute. Debug labels appear on signal bars with full slot breakdowns. A shadow position tracker mirrors entry, exit, and trail logic with visual labels, so you can study the complete cycle before switching to Backtest.</p></div>
       <div class="card"><div class="ico ico-amber">&#x1F514;</div><h3>Detailed alerts</h3><p>Four alert types &mdash; long entry, short entry, long exit, short exit. Each message can include every active slot with its current value and threshold, plus the trail levels. Toggle slot details and SL/TP lines independently. Pyramid layers fire their own alerts too.</p></div>
     </div>
     <div class="note"><b>Built-in safeguards:</b> the strategy auto-detects misconfigured slots &mdash; inverted "between" bounds, or "diverging/converging" without a comparison series &mdash; and warns you on-chart so a silent mistake never costs you a signal.</div>
@@ -238,10 +252,11 @@
     <p class="lead">On each bar, the engine resolves in a fixed order so behaviour is always predictable.</p>
     <div class="steps" style="margin-top:2.5rem;max-width:760px">
       <div class="step"><div class="step-content"><h4>Count the quorum</h4><p>For each side, count active slots and how many pass their condition.</p></div></div>
-      <div class="step"><div class="step-content"><h4>Raise raw signals</h4><p>A side fires if passing slots meet its minimum, and the framework is active.</p></div></div>
+      <div class="step"><div class="step-content"><h4>Check block slots</h4><p>If any block slot passes for a side, that signal is vetoed regardless of quorum.</p></div></div>
+      <div class="step"><div class="step-content"><h4>Raise raw signals</h4><p>A side fires if passing slots meet its minimum, no block slot vetoes it, and the framework is active.</p></div></div>
       <div class="step"><div class="step-content"><h4>Resolve conflict</h4><p>If both entry sides fire, apply your conflict rule (block / long wins / short wins).</p></div></div>
       <div class="step"><div class="step-content"><h4>Exits beat pyramids</h4><p>If an exit and a same-bar pyramid both qualify, the exit wins.</p></div></div>
-      <div class="step"><div class="step-content"><h4>Enter, add, or exit</h4><p>Enter from flat, add a pyramid layer, or close &mdash; in Backtest mode only.</p></div></div>
+      <div class="step"><div class="step-content"><h4>Enter, add, or exit</h4><p>Enter from flat only (no direct reversal), add a pyramid layer, or close &mdash; in Backtest mode only.</p></div></div>
       <div class="step"><div class="step-content"><h4>Check the dual trail</h4><p>On confirmed close, apply the profit or loss trail and close all layers if hit.</p></div></div>
     </div>
   </div>

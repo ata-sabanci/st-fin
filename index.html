@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="ST-Fin measures markets through geometry. Five triangles, 20 geometric lenses, classic oscillators, volume, 13 condition types, quorum-based signals. A TradingView strategy built for AI-assisted exploration.">
+<meta name="description" content="ST-Fin measures markets through geometry. Five triangles, 20 geometric lenses, classic oscillators, volume, 13 condition types, 10 configurable slots, quorum-based signals. A TradingView strategy built for AI-assisted exploration.">
 <title>ST-Fin · AI-Assisting Geometric Strategy for TradingView</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -30,7 +30,7 @@
   <div class="wrap">
     <div class="pill"><span class="live"></span> TradingView Strategy · Pine Script v6</div>
     <h1>Measure markets through<br><span class="grad">geometry</span></h1>
-    <p class="lead">Five triangles. Four metrics each. Twenty geometric lenses, fourteen classic oscillators, intrabar volume, and seven price series &mdash; combined through twenty configurable slots with quorum-based signals.</p>
+    <p class="lead">Five triangles. Four metrics each. Twenty geometric lenses, fourteen classic oscillators, intrabar volume, and seven price series &mdash; combined through ten configurable slots with quorum-based signals.</p>
     <div class="btn-row">
       <a href="pricing.html" class="btn btn-pri">Start free trial &rarr;</a>
       <a href="framework.html" class="btn btn-gh">See how it works</a>
@@ -122,7 +122,8 @@
       <div class="card"><div class="ico ico-green">&#x1F50A;</div><h3>Intrabar volume <span class="tag tag-new">new</span></h3><p>Buy, sell, and total volume measured from a lower timeframe &mdash; real order-flow context inside every bar.</p></div>
       <div class="card"><div class="ico ico-purple">&#x1F517;</div><h3>Dual comparison <span class="tag tag-new">new</span></h3><p>Each slot compares against two targets at once (<code>A&nbsp;AND&nbsp;B</code> or <code>A&nbsp;OR&nbsp;B</code>) &mdash; series vs series, not just fixed thresholds.</p></div>
       <div class="card"><div class="ico ico-red">&#x1F6E1;</div><h3>Dual trailing stop</h3><p>Separate trail percentages for profit and loss. Tight on the way up, room to breathe in drawdown. Tracks confirmed bar close.</p></div>
-      <div class="card"><div class="ico ico-blue">&#x1F50D;</div><h3>Observe mode</h3><p>See signals on chart without executing trades. Study the geometry, tune your slots, then flip to Backtest.</p></div>
+      <div class="card"><div class="ico ico-blue">&#x1F6AB;</div><h3>Block slots (veto) <span class="tag tag-new">new</span></h3><p>Any slot can veto a signal instead of supporting it. One passing block slot kills the entry or exit for that side.</p></div>
+      <div class="card"><div class="ico ico-blue">&#x1F50D;</div><h3>Observe mode</h3><p>See signals on chart without executing trades. A shadow position tracker mirrors entry, exit, and trail logic so you can study the full cycle.</p></div>
     </div>
     <div style="text-align:center;margin-top:2.5rem"><a href="strategy.html" class="btn btn-gh">Explore the strategy engine &rarr;</a></div>
   </div>
@@ -133,7 +134,7 @@
   <div class="wrap">
     <span class="eyebrow">AI as the bridge</span>
     <h2>Explore a space too large to search alone</h2>
-    <p class="lead">With dozens of variables, thirteen conditions, and twenty slots, the configuration space runs into the trillions. AI helps you read what the geometry is showing and turn observation into precise settings.</p>
+    <p class="lead">With dozens of variables, thirteen conditions, and ten slots, the configuration space runs into the billions. AI helps you read what the geometry is showing and turn observation into precise settings.</p>
     <div class="grid g2" style="margin-top:2.5rem">
       <div class="card"><div class="ico ico-cyan">&#x1F916;</div><h3>AI Chart Copilot</h3><p>Reads your TradingView chart in real time. Activate a lens, ask, and explore interactively.</p><a href="https://www.tradingview.com/blog/en/tradingview-ai-chart-copilot-beta-57730/" style="font-size:13px;margin-top:.8rem;display:inline-block">About Copilot &rarr;</a></div>
       <div class="card"><div class="ico ico-purple">&#x1F4CA;</div><h3>CSV export + any AI</h3><p>Export active lens readings and upload to ChatGPT, Claude, or Gemini for deeper pattern mining.</p><a href="ai.html" style="font-size:13px;margin-top:.8rem;display:inline-block">Full AI workflow &rarr;</a></div>
